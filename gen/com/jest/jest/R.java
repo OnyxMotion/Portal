@@ -31,10 +31,10 @@ public final class R {
         public static final int ic_launcher=0x7f020000;
     }
     public static final class id {
-        public static final int action_settings=0x7f08002c;
-        public static final int analysis_compare=0x7f080027;
-        public static final int analysis_forces=0x7f080028;
-        public static final int analysis_similarity=0x7f080026;
+        public static final int action_settings=0x7f080028;
+        public static final int analysis_compare=0x7f080023;
+        public static final int analysis_forces=0x7f080024;
+        public static final int analysis_similarity=0x7f080022;
         public static final int analyze_data=0x7f080007;
         public static final int build_motion_set_parent=0x7f08000d;
         public static final int build_motion_set_title=0x7f08000e;
@@ -44,38 +44,34 @@ public final class R {
         public static final int choose_reference=0x7f080016;
         public static final int choose_set_spinner=0x7f08000f;
         public static final int connect_button=0x7f080003;
-        public static final int declination_textview=0x7f08001c;
         public static final int devices_radiogroup=0x7f080017;
-        public static final int fragment1=0x7f080023;
-        public static final int fragment2=0x7f080024;
+        public static final int fragment1=0x7f08001f;
+        public static final int fragment2=0x7f080020;
         public static final int fragment_title=0x7f080010;
         public static final int hwAccelerationCb=0x7f08000b;
-        public static final int instruction_text=0x7f08001d;
-        public static final int list_row_description=0x7f080029;
-        public static final int list_row_score=0x7f08002b;
-        public static final int list_row_set=0x7f08002a;
-        public static final int new_data_description=0x7f08001e;
-        public static final int new_data_score=0x7f080020;
-        public static final int new_data_set=0x7f08001f;
+        public static final int instruction_text=0x7f080019;
+        public static final int list_row_description=0x7f080025;
+        public static final int list_row_score=0x7f080027;
+        public static final int list_row_set=0x7f080026;
+        public static final int new_data_description=0x7f08001a;
+        public static final int new_data_score=0x7f08001c;
+        public static final int new_data_set=0x7f08001b;
         public static final int pause=0x7f080004;
-        public static final int pitch_textview=0x7f08001a;
         public static final int play_pause=0x7f080014;
         public static final int port_text=0x7f080002;
         public static final int reference_title=0x7f080011;
         public static final int resetButton=0x7f080005;
-        public static final int roll_textview=0x7f08001b;
         public static final int save_data=0x7f080015;
         public static final int save_data_unused=0x7f080006;
-        public static final int save_dialog_cancel=0x7f080022;
-        public static final int save_dialog_save=0x7f080021;
+        public static final int save_dialog_cancel=0x7f08001e;
+        public static final int save_dialog_save=0x7f08001d;
         public static final int score_text=0x7f080012;
         public static final int sensorHistoryPlot=0x7f08000a;
         public static final int sensorHistoryPlotFragment=0x7f080013;
-        public static final int sensorHistoryPlotFragment2=0x7f080025;
+        public static final int sensorHistoryPlotFragment2=0x7f080021;
         public static final int showFpsCb=0x7f08000c;
         public static final int train_motion_set=0x7f080008;
         public static final int view_data=0x7f080009;
-        public static final int yaw_textview=0x7f080019;
     }
     public static final class layout {
         public static final int activity_main=0x7f030000;

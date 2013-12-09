@@ -5,9 +5,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 
-import org.json.JSONObject;
-
 import android.app.Activity;
+import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PointF;
@@ -17,7 +16,6 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -46,6 +44,7 @@ import com.jest.database.MotionDatabaseManager;
 import com.jest.database.MotionDatabaseManager.DataArrays;
 import com.jest.database.MotionDatabaseManager.MotionLabel;
 import com.jest.jest.R;
+import com.jest.razor.RazorExample;
 
 public class OnyxMotionActivity extends Activity implements OnTouchListener, SensorEventListener {
 
@@ -80,8 +79,9 @@ public class OnyxMotionActivity extends Activity implements OnTouchListener, Sen
 
 	private static TextView title;
 	private TextView referenceText;
-	private TextView scoreText;
+	private static TextView scoreText;
 	public static final int MENU_CONNECT = Menu.FIRST;
+	public static final int MENU_DEBUG = Menu.FIRST + 1;
 	private Spinner chooseReferenceSpinner;
 	private Button playPauseButton;
 	private Button saveDataButton;
@@ -96,17 +96,25 @@ public class OnyxMotionActivity extends Activity implements OnTouchListener, Sen
 	private boolean sensorReady = false;
 
 	// /////////////// ANALYSIS VARIABLES ///////////////
-	private MotionAnalyzer MA = null;
-	private LinkedList<Float> xTemplate = null;
-	private LinkedList<Float> yTemplate = null;
-	private LinkedList<Float> zTemplate = null;
-	private LinkedList<Float> xStreaming = null;
-	private LinkedList<Float> yStreaming = null;
-	private LinkedList<Float> zStreaming = null;
-	private int templateLength = 0; // only need to analyze the length of the
-									// template in real-time
-	private int streamLength = 0;
-	private int analysesCompleted = 0;
+	private static MotionAnalyzer MA = null;
+	private static LinkedList<Float> xTemplate = null;
+	private static LinkedList<Float> yTemplate = null;
+	private static LinkedList<Float> zTemplate = null;
+	private static LinkedList<Float> xStreaming = null;
+	private static LinkedList<Float> yStreaming = null;
+	private static LinkedList<Float> zStreaming = null;
+	private static int templateLength = 0; // only need to analyze the length of
+											// the
+	// template in real-time
+	private static int streamLength = 0;
+	private static int analysesCompleted = 0;
+	private static int analysisEveryX = 10; // motion analysis will occur every
+
+	// sampleRate/analysisEveryX time
+	// interval
+
+	// ///////////////// Networking //////////////////////
+	private BluetoothAdapter bluetoothAdapter;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -257,7 +265,7 @@ public class OnyxMotionActivity extends Activity implements OnTouchListener, Sen
 	// For real-time graph streaming
 	// TODO - make sure whoever calls this function ensures that angles are b/w
 	// -180 and 180
-	private void addDataPoint(float x, float y, float z) {
+	public static void addDataPoint(float x, float y, float z) {
 
 		// Update the graph:
 		// update level data:
@@ -363,7 +371,8 @@ public class OnyxMotionActivity extends Activity implements OnTouchListener, Sen
 	@Override
 	public void onResume() {
 		super.onResume();
-		redrawer.start();
+		if (redrawer != null)
+			redrawer.start();
 		if (redrawer2 != null)
 			redrawer2.start();
 		// Toast.makeText(OnyxMotionActivity.this, "onResume",
@@ -377,7 +386,8 @@ public class OnyxMotionActivity extends Activity implements OnTouchListener, Sen
 
 	@Override
 	public void onPause() {
-		redrawer.pause();
+		if (redrawer != null)
+			redrawer.pause();
 		if (redrawer2 != null)
 			redrawer2.start();
 		super.onPause();
@@ -385,7 +395,8 @@ public class OnyxMotionActivity extends Activity implements OnTouchListener, Sen
 
 	@Override
 	public void onDestroy() {
-		redrawer.finish();
+		if (redrawer != null)
+			redrawer.finish();
 		if (redrawer2 != null)
 			redrawer2.finish();
 		super.onDestroy();
@@ -397,6 +408,7 @@ public class OnyxMotionActivity extends Activity implements OnTouchListener, Sen
 		super.onCreateOptionsMenu(menu);
 
 		menu.add(Menu.NONE, MENU_CONNECT, Menu.NONE, "Connect Onyx");
+		menu.add(Menu.NONE, MENU_DEBUG, Menu.NONE, "Debug with phone");
 		return true;
 	}
 
@@ -406,8 +418,10 @@ public class OnyxMotionActivity extends Activity implements OnTouchListener, Sen
 			case MENU_CONNECT:
 				// Toast.makeText(OnyxMotionActivity.this,
 				// "Chose device connect", Toast.LENGTH_LONG).show();
-				setupSensor();
+				setupRazorSensor();
 				return true;
+			case MENU_DEBUG:
+				setupSensor();
 			default:
 				return super.onOptionsItemSelected(item);
 		}
@@ -421,6 +435,11 @@ public class OnyxMotionActivity extends Activity implements OnTouchListener, Sen
 		sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE), SensorManager.SENSOR_DELAY_FASTEST);
 		sensorReady = true;
 		Toast.makeText(OnyxMotionActivity.this, "Now testing with internal sensors", Toast.LENGTH_LONG).show();
+	}
+
+	private void setupRazorSensor() {
+		Intent i = new Intent(OnyxMotionActivity.this, RazorExample.class);
+		startActivity(i);
 	}
 
 	// ////////////////// GET MOTION DATA INTO VARIABLES ////////////////////
@@ -553,13 +572,13 @@ public class OnyxMotionActivity extends Activity implements OnTouchListener, Sen
 		return (float) Math.sqrt(x * x + y * y);
 	}
 
-	class AnalyzeMotionTask extends AsyncTask<Float, Float, float[]> {
+	static class AnalyzeMotionTask extends AsyncTask<Float, Float, float[]> {
 
 		@Override
 		protected float[] doInBackground(Float... params) {
 			// REAL-TIME DATA ANALYSIS
 			float[] res = null;
-			if (streamLength > templateLength) {
+			if ((streamLength > templateLength) && (streamLength % analysisEveryX) == 0) {
 				res = MA.testAlgorithm1(xStreaming, yStreaming, zStreaming, xTemplate, yTemplate, zTemplate, templateLength);
 				analysesCompleted++;
 			}
@@ -571,8 +590,9 @@ public class OnyxMotionActivity extends Activity implements OnTouchListener, Sen
 			// TODO Auto-generated method stub
 			super.onPostExecute(res);
 			if (res != null)
-				//scoreText.setText("Scores:::" + " x: " + res[0] + " y: " + res[1] + " z: " + res[2] + " // Overall: " + res[3]);
-				scoreText.setText("Scores:::" + "steamLength:"+streamLength+" / analysesCompleted:"+analysesCompleted+" / asdf: " + res[3]);
+				// scoreText.setText("Scores:::" + " x: " + res[0] + " y: " +
+				// res[1] + " z: " + res[2] + " // Overall: " + res[3]);
+				scoreText.setText("Scores:::" + "steamLength:" + streamLength + " / analysesCompleted:" + analysesCompleted + " / asdf: " + res[3]);
 		}
 
 	}

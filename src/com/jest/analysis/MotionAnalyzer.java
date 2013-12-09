@@ -72,20 +72,6 @@ public class MotionAnalyzer {
 		removeDiscontinuities(this.yTemplate, yT, templateLength);
 		removeDiscontinuities(this.zTemplate, zT, templateLength);
 
-		// this.x1 = toFloatArray(sx1, templateSize);
-		// this.y1 = toFloatArray(sy1, templateSize);
-		// this.z1 = toFloatArray(sz1, templateSize);
-		// this.x2 = toFloatArray(xT, templateSize);
-		// this.y2 = toFloatArray(yT, templateSize);
-		// this.z2 = toFloatArray(zT, templateSize);
-
-		// this.x1 = removeDiscontinuities(this.x1);
-		// this.y1 = removeDiscontinuities(this.y1);
-		// this.z1 = removeDiscontinuities(this.z1);
-		// this.x2 = removeDiscontinuities(this.x2);
-		// this.y2 = removeDiscontinuities(this.y2);
-		// this.z2 = removeDiscontinuities(this.z2);
-		//
 		// // Filter and DTW:
 		HanningFilter(this.xStream, templateLength);
 		HanningFilter(this.yStream, templateLength);
@@ -239,7 +225,26 @@ public class MotionAnalyzer {
 		}
 
 	}
+	
+	//Precondition: startLength << array.length
+	//Find which index gives the optimal alignment between the beginning of template[]
+	//as it's slid over series[]
+	public int alignSequenceStart(float[] series, float[] template, int startLength) {
+		int index = 0; 
+		float distance = 999999999; //distance is big because we're re-using DTW to find
+		float test;
+		//an optimal start alignment
+		//TODO - make sure we're selecting series[i: i+startLength]
+		for (int i = 0; i < startLength; i++) {
+			test = DTW(series, template, startLength);
+			if (test < distance) {
+				index = i; //current winner
+			}
+		}
+		return index; 
+	}
 
+	//TODO - can probably try a band constraint in the cost matrix DTW
 	public float DTW(float[] array1, float[] array2, int templateLength) {
 		float[][] DTW;
 		int len1 = templateLength; //array1.length;
@@ -254,6 +259,9 @@ public class MotionAnalyzer {
 			DTW[i][0] = 9999999999.0f; // really big number
 		}
 		DTW[0][0] = 0;
+		
+		//Switching to windowed version:
+		//j goes from i-R to i+R where R is window width
 
 		// Main loop
 		for (int i = 1; i < len1; i++) {
@@ -296,6 +304,14 @@ public class MotionAnalyzer {
 
 	public float euclidDistance(float x, float y) {
 		return (float) Math.pow((x - y), 2.0);
+	}
+	
+	public float vectorEuclidDistance(float[] x, float[] y, int len) {
+		float sum = 0;
+		for (int i = 0; i < len; i++) {
+			sum += euclidDistance(x[i], y[i]);
+		}
+		return sum;
 	}
 
 	public float signalAbsAvg(float[] data) {

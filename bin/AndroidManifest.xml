@@ -45,6 +45,8 @@
         </activity>
         <activity android:name="com.jest.phone.BuildMotionSet" >
         </activity>
+        <service android:name="com.jest.onyx.DeviceService" >
+        </service>
     </application>
 
 </manifest>

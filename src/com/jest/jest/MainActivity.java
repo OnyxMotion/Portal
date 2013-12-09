@@ -20,26 +20,30 @@ public class MainActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_main);
-
-		chooseRazorSensor = (Button) findViewById(R.id.choose_razor);
-		choosePhone = (Button) findViewById(R.id.choose_phone);
-
-		chooseRazorSensor.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				Intent i = new Intent(MainActivity.this, RazorExample.class);
-				startActivity(i);
-			}
-		});
-
-		choosePhone.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				Intent i = new Intent(MainActivity.this, OnyxMotionActivity.class);
-				startActivity(i);
-			}
-		});
+		
+		Intent i = new Intent(MainActivity.this, OnyxMotionActivity.class);
+		startActivity(i);
+		
+//		setContentView(R.layout.activity_main);
+//
+//		chooseRazorSensor = (Button) findViewById(R.id.choose_razor);
+//		choosePhone = (Button) findViewById(R.id.choose_phone);
+//
+//		chooseRazorSensor.setOnClickListener(new OnClickListener() {
+//			@Override
+//			public void onClick(View v) {
+//				Intent i = new Intent(MainActivity.this, RazorExample.class);
+//				startActivity(i);
+//			}
+//		});
+//
+//		choosePhone.setOnClickListener(new OnClickListener() {
+//			@Override
+//			public void onClick(View v) {
+//				Intent i = new Intent(MainActivity.this, OnyxMotionActivity.class);
+//				startActivity(i);
+//			}
+//		});
 
 	}
 

@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical" >
+
+    <TextView
+        android:id="@+id/instruction_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#FFFFBB33"
+        android:layout_margin="20dp"
+        android:textStyle="bold" />
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+        android:background="#FFFFBB33"
+        android:contentDescription="@string/app_name"
+        android:scaleType="center"
+        android:src="@drawable/ic_launcher" />
+
+    <EditText
+        android:id="@+id/new_data_description"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="4dp"
+        android:layout_marginLeft="4dp"
+        android:layout_marginRight="4dp"
+        android:layout_marginTop="16dp"
+        android:hint="Description"
+        android:inputType="textEmailAddress" />
+
+    <EditText
+        android:id="@+id/new_data_set"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="2dp"
+        android:layout_marginLeft="2dp"
+        android:layout_marginRight="2dp"
+        android:layout_marginTop="2dp"
+        android:hint="Set"
+        android:inputType="textEmailAddress" />
+
+    <EditText
+        android:id="@+id/new_data_score"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="2dp"
+        android:layout_marginLeft="2dp"
+        android:layout_marginRight="2dp"
+        android:layout_marginTop="2dp"
+        android:hint="Score"
+        android:inputType="number" />
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:orientation="horizontal" >
+
+        <Button
+            android:id="@+id/save_dialog_save"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:enabled="true"
+            android:text="Save" />
+
+        <Button
+            android:id="@+id/save_dialog_cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:enabled="true"
+            android:text="Cancel" />
+    </LinearLayout>
+
+</LinearLayout>

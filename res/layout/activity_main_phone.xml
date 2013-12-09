@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:orientation="horizontal" >
+
+        <LinearLayout
+            android:layout_width="600dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical" >
+
+<!--             <EditText -->
+<!--                 android:id="@+id/host_text" -->
+<!--                 android:layout_width="fill_parent" -->
+<!--                 android:layout_height="wrap_content" -->
+<!--                 android:drawableLeft="@drawable/ic_launcher" -->
+<!--                 android:hint="host" -->
+<!--                 android:padding="5dip" -->
+<!--                 android:singleLine="true" -->
+<!--                 android:textColor="#999999" -->
+<!--                 android:textSize="14dip" /> -->
+
+            <EditText
+                android:id="@+id/port_text"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:drawableLeft="@drawable/ic_launcher"
+                android:hint="port"
+                android:padding="5dip"
+                android:singleLine="true"
+                android:textColor="#999999"
+                android:textSize="14dip" />
+
+            <Button
+                android:id="@+id/connect_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="30dp"
+                android:text="Begin" />
+
+            <Button
+                android:id="@+id/pause"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:enabled="true"
+                android:text="Play/Pause" />
+
+            <Button
+                android:id="@+id/resetButton"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:enabled="true"
+                android:layout_marginBottom="30dp"
+                android:text="Reset View" />
+
+            <Button
+                android:id="@+id/save_data_unused"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:enabled="true"
+                android:text="Save Data" />
+            
+            <Button
+                android:id="@+id/analyze_data"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:enabled="true"
+                android:text="Analysis" />
+            
+            <Button
+                android:id="@+id/train_motion_set"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:enabled="true"
+                android:text="Train Motion Set" />
+            
+            <Button
+                android:id="@+id/view_data"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:enabled="true"
+                android:text="View Motion Data..." />
+        </LinearLayout>
+
+        <!-- <com.androidplot.xy.XYPlot -->
+        <!-- android:id="@+id/aprLevelsPlot" -->
+        <!-- android:layout_width="fill_parent" -->
+        <!-- android:layout_height="fill_parent" -->
+        <!-- android:layout_margin="0dp" -->
+        <!-- android:layout_weight="3" -->
+        <!-- android:layout_marginTop="10px" -->
+        <!-- android:layout_marginLeft="10px" -->
+        <!-- android:layout_marginRight="10px" -->
+        <!-- androidPlot.backgroundPaint.color="#000000" -->
+        <!-- androidPlot.borderPaint.color="#000000" -->
+        <!-- androidplot.renderMode="use_background_thread" -->
+        <!-- androidPlot.title="Levels" -->
+        <!-- androidPlot.titleWidget.labelPaint.textSize="@dimen/title_font_size" -->
+        <!-- androidPlot.domainLabelWidget.labelPaint.textSize="@dimen/domain_label_font_size" -->
+        <!-- androidPlot.rangeLabelWidget.labelPaint.textSize="@dimen/range_label_font_size" -->
+        <!-- androidPlot.graphWidget.backgroundPaint.color="#000000" -->
+        <!-- androidPlot.graphWidget.gridBackgroundPaint.color="#000000" -->
+        <!-- androidPlot.graphWidget.domainGridLinePaint.color="#00000000" -->
+        <!-- androidPlot.graphWidget.domainOriginLinePaint.color="#00000000" -->
+        <!-- androidPlot.graphWidget.domainOriginLabelPaint.color="#00000000" -->
+        <!-- androidPlot.graphWidget.marginTop="20dp" -->
+        <!-- androidPlot.graphWidget.marginLeft="15dp" -->
+        <!-- androidPlot.graphWidget.marginBottom="25dp" -->
+        <!-- androidPlot.graphWidget.marginRight="10dp" -->
+        <!-- androidPlot.graphWidget.rangeLabelPaint.textSize="@dimen/range_tick_label_font_size" -->
+        <!-- androidPlot.graphWidget.rangeOriginLabelPaint.textSize="@dimen/range_tick_label_font_size" -->
+        <!-- androidPlot.graphWidget.domainLabelPaint.textSize="@dimen/domain_tick_label_font_size" -->
+        <!-- androidPlot.graphWidget.domainOriginLabelPaint.textSize="@dimen/domain_tick_label_font_size" -->
+        <!-- androidPlot.legendWidget.textPaint.textSize="10dp" -->
+        <!-- androidPlot.legendWidget.iconSizeMetrics.heightMetric.value="15dp" -->
+        <!-- androidPlot.legendWidget.iconSizeMetrics.widthMetric.value="15dp" -->
+        <!-- androidPlot.legendWidget.heightMetric.value="25dp" -->
+        <!-- /> -->
+
+        <com.androidplot.xy.XYPlot
+            android:id="@+id/sensorHistoryPlot"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_margin="0dp"
+            android:layout_marginLeft="10px"
+            android:layout_marginRight="10px"
+            android:layout_marginTop="10px"
+            android:layout_weight="1"
+            androidPlot.backgroundPaint.color="#000000"
+            androidPlot.borderPaint.color="#000000"
+            androidPlot.domainLabel="Domain"
+            androidPlot.domainLabelWidget.labelPaint.textSize="@dimen/domain_label_font_size"
+            androidPlot.graphWidget.backgroundPaint.color="#000000"
+            androidPlot.graphWidget.domainLabelPaint.textSize="@dimen/domain_tick_label_font_size"
+            androidPlot.graphWidget.domainOriginLabelPaint.textSize="@dimen/domain_tick_label_font_size"
+            androidPlot.graphWidget.gridBackgroundPaint.color="#000000"
+            androidPlot.graphWidget.marginBottom="25dp"
+            androidPlot.graphWidget.marginLeft="15dp"
+            androidPlot.graphWidget.marginRight="10dp"
+            androidPlot.graphWidget.marginTop="20dp"
+            androidPlot.graphWidget.rangeLabelPaint.textSize="@dimen/range_tick_label_font_size"
+            androidPlot.graphWidget.rangeOriginLabelPaint.textSize="@dimen/range_tick_label_font_size"
+            androidPlot.legendWidget.heightMetric.value="25dp"
+            androidPlot.legendWidget.iconSizeMetrics.heightMetric.value="15dp"
+            androidPlot.legendWidget.iconSizeMetrics.widthMetric.value="15dp"
+            androidPlot.legendWidget.textPaint.textSize="@dimen/legend_text_font_size"
+            androidPlot.rangeLabel="Range"
+            androidPlot.rangeLabelWidget.labelPaint.textSize="@dimen/range_label_font_size"
+            androidPlot.title="History"
+            androidPlot.titleWidget.labelPaint.textSize="@dimen/title_font_size"
+            androidplot.renderMode="use_background_thread" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal" >
+
+        <CheckBox
+            android:id="@+id/hwAccelerationCb"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="HW Acceleration"
+            android:visibility="gone" />
+
+        <CheckBox
+            android:id="@+id/showFpsCb"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Show FPS"
+            android:visibility="gone" />
+    </LinearLayout>
+
+</LinearLayout>

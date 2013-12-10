@@ -7,6 +7,7 @@ import java.util.LinkedList;
 
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PointF;
@@ -14,6 +15,7 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.media.MediaPlayer;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Menu;
@@ -110,6 +112,8 @@ public class OnyxMotionActivity extends Activity implements OnTouchListener, Sen
 	private static int analysesCompleted = 0;
 	private static int analysisEveryX = 10; // motion analysis will occur every
 	private final static Object lock = new Object();
+	private static Context mContext;
+	private static MediaPlayer mPlayer;
 
 	// sampleRate/analysisEveryX time
 	// interval
@@ -147,6 +151,9 @@ public class OnyxMotionActivity extends Activity implements OnTouchListener, Sen
 		playPauseButton = (Button) findViewById(R.id.play_pause);
 		saveDataButton = (Button) findViewById(R.id.save_data);
 		setInputListeners();
+
+		// OTHER stuffs
+		OnyxMotionActivity.mContext = getApplicationContext();
 
 		// FOR TESTING - internal sensors
 		sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
@@ -599,9 +606,17 @@ public class OnyxMotionActivity extends Activity implements OnTouchListener, Sen
 			if (res != null)
 				// scoreText.setText("Scores:::" + " x: " + res[0] + " y: " +
 				// res[1] + " z: " + res[2] + " // Overall: " + res[3]);
-				scoreText.setText("Scores:::" + "steamLength:" + streamLength + " / analysesCompleted:" + analysesCompleted + " / asdf: " + res[3]);
+				scoreText.setText("Score: " + MotionAnalyzer.round(res[3], 2));
+				
+				//VERY HACKY - hardcoded threshold to do alert
+				float threshold = 100.0f;
+				if (res[3] < threshold) {
+					Toast.makeText(mContext, "NICE!!", Toast.LENGTH_LONG).show();
+//					if (mPlayer == null)
+//						mPlayer = MediaPlayer.create(mContext, R.raw.aaanicholas);
+//					mPlayer.start();
+				}
 		}
-
 	}
 
 	// public static void showNewData(int len, ArrayList<Float> x,

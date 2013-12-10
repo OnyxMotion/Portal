@@ -67,20 +67,17 @@ public class MotionAnalyzer {
 		zT = firstDerivative(zT, templateLength);
 		//
 		// // Find likey start locations:
-		// int xIndexAligned = 0;//alignSequenceStart(this.xStream,
-		// this.xTemplate, analysisEveryX);
-		// int yIndexAligned = 0;//alignSequenceStart(this.yStream,
-		// this.yTemplate, analysisEveryX);
-		// int zIndexAligned = 0;//alignSequenceStart(this.zStream,
-		// this.zTemplate, analysisEveryX);
+		int xIndexAligned = alignSequenceStart(this.xStream, xT, analysisEveryX);
+		int yIndexAligned = alignSequenceStart(this.yStream, yT, analysisEveryX);
+		int zIndexAligned = alignSequenceStart(this.zStream, zT, analysisEveryX);
 		//
 		// // DTW(arr1, arr2, lengthToAnalyze, offset1, offset2)
 		// // Analysis from offset1 to offset1+lengthToAnalyze of arr1, offset2
 		// to
 		// // offset2+lengthToAnalyze of arr2
-		 result[0] = DTW(this.xStream, xT, templateLength, 0, 0);
-		 result[1] = DTW(this.yStream, yT, templateLength, 0, 0);
-		 result[2] = DTW(this.zStream, zT, templateLength, 0, 0);
+		result[0] = DTW(this.xStream, xT, templateLength, xIndexAligned, 0);
+		result[1] = DTW(this.yStream, yT, templateLength, yIndexAligned, 0);
+		result[2] = DTW(this.zStream, zT, templateLength, zIndexAligned, 0);
 
 		// // scale DTW scores by power
 		// // assume signal1 is the reference
@@ -88,7 +85,7 @@ public class MotionAnalyzer {
 		// // has a worse score
 		// result[3] = finalScoreModel(result[0], result[1], result[2]);
 
-		result[3] = (float) Math.sqrt(result[0]*result[0] + result[1]*result[1] + result[2]*result[2]);
+		result[3] = (float) Math.sqrt(result[0] * result[0] + result[1] * result[1] + result[2] * result[2]);
 		return result;
 	}
 
@@ -245,17 +242,16 @@ public class MotionAnalyzer {
 	// as it's slid over series[]
 	public int alignSequenceStart(float[] series, float[] template, int startLength) {
 		int index = 0;
-		float distance = 999999999; // distance is big because we're re-using
-									// DTW to find
+		float distance = 999999999; 
 		float test;
 		// an optimal start alignment
 		// TODO - make sure we're selecting series[i: i+startLength]
 		for (int i = 0; i < startLength; i++) {
 
-			// float[] thisSeries = null;
-			// System.arraycopy(series, i, thisSeries, 0, startLength);
+			float[] thisSeries = new float[startLength];
+			System.arraycopy(series, i, thisSeries, 0, startLength);
 
-			test = DTW(series, template, startLength, i, 0);
+			test = vectorEuclidDistance(thisSeries, template, startLength);
 
 			if (test < distance) {
 				index = i; // current winner
@@ -271,8 +267,8 @@ public class MotionAnalyzer {
 	// offset2+lengthToAnalyze of arr2
 	public float DTW(float[] array1, float[] array2, int templateLength, int array1IndexOffset, int array2IndexOffset) {
 		float[][] DTW;
-		int len1 = templateLength;// + array1IndexOffset; // array1.length;
-		int len2 = templateLength;// + array2IndexOffset; // array2.length;
+		int len1 = array1.length - array1IndexOffset;// + array1IndexOffset; // array1.length;
+		int len2 = array2.length - array2IndexOffset;// + array2IndexOffset; // array2.length;
 		DTW = new float[len1][len2];
 
 		// Initialization
@@ -289,8 +285,8 @@ public class MotionAnalyzer {
 		// template1 / 2 (though we're assuming they're the same here)
 
 		// Main loop
-		int iStart = 1;// 1 + array1IndexOffset;
-		int jStart = 1;// 1 + array2IndexOffset;
+		int iStart = array1IndexOffset > 0? array1IndexOffset : 1;
+		int jStart = array2IndexOffset > 0? array2IndexOffset : 1;
 		for (int i = iStart; i < len1; i++) {
 			for (int j = jStart; j < len2; j++) {
 				float cost = euclidDistance(array1[i], array2[j]);
@@ -339,6 +335,12 @@ public class MotionAnalyzer {
 			sum += euclidDistance(x[i], y[i]);
 		}
 		return sum;
+	}
+
+	private int max(int x, int y) {
+		if (x > y)
+			return x;
+		return y;
 	}
 
 	public float signalAbsAvg(float[] data) {

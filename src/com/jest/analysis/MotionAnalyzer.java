@@ -4,6 +4,8 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
+import android.util.Log;
+
 import com.androidplot.xy.SimpleXYSeries;
 
 public class MotionAnalyzer {
@@ -12,26 +14,16 @@ public class MotionAnalyzer {
 	private float[] yStream;
 	private float[] zStream;
 	private int len1;
-	private float[] xTemplate;
-	private float[] yTemplate;
-	private float[] zTemplate;
-	private int len2;
 
 	public MotionAnalyzer(int maxSize) {
 		maxSize++;
 		xStream = new float[maxSize];
 		yStream = new float[maxSize];
 		zStream = new float[maxSize];
-		xTemplate = new float[maxSize];
-		yTemplate = new float[maxSize];
-		zTemplate = new float[maxSize];
 		for (int i = 0; i < maxSize; i++) {
 			xStream[i] = 0;
 			yStream[i] = 0;
 			zStream[i] = 0;
-			xTemplate[i] = 0;
-			yTemplate[i] = 0;
-			zTemplate[i] = 0;
 		}
 	}
 
@@ -47,56 +39,56 @@ public class MotionAnalyzer {
 		return zStream;
 	}
 
-	public float[] getX2() {
-		return xTemplate;
-	}
-
-	public float[] getY2() {
-		return yTemplate;
-	}
-
-	public float[] getZ2() {
-		return zTemplate;
-	}
-
 	// Smoothing and DTW; returns scores in array
-	public float[] testAlgorithm1(LinkedList<Float> xS, LinkedList<Float> yS, LinkedList<Float> zS, LinkedList<Float> xT, LinkedList<Float> yT,
-			LinkedList<Float> zT, int templateLength) {
+	public float[] testAlgorithm1(LinkedList<Float> xS, LinkedList<Float> yS, LinkedList<Float> zS, float[] xT, float[] yT, float[] zT, int templateLength,
+			int analysisEveryX) {
 		float[] result = new float[4]; // return 3 metrics, for matches in x, y,
 										// z
 
-		removeDiscontinuities(this.xStream, xS, templateLength);
-		removeDiscontinuities(this.yStream, yS, templateLength);
-		removeDiscontinuities(this.zStream, zS, templateLength);
-		removeDiscontinuities(this.xTemplate, zT, templateLength);
-		removeDiscontinuities(this.yTemplate, yT, templateLength);
-		removeDiscontinuities(this.zTemplate, zT, templateLength);
-
-		// // Filter and DTW:
+		// Preconditioning: remove angle discontinuities, low-pass filter, and
+		// take first derivative
+		removeDiscontinuitiesAndConvert(this.xStream, xS, templateLength);
+		removeDiscontinuitiesAndConvert(this.yStream, yS, templateLength);
+		removeDiscontinuitiesAndConvert(this.zStream, zS, templateLength);
+		removeDiscontinuities(zT, templateLength);
+		removeDiscontinuities(yT, templateLength);
+		removeDiscontinuities(zT, templateLength);
 		HanningFilter(this.xStream, templateLength);
 		HanningFilter(this.yStream, templateLength);
 		HanningFilter(this.zStream, templateLength);
-		HanningFilter(this.xTemplate, templateLength);
-		HanningFilter(this.yTemplate, templateLength);
-		HanningFilter(this.zTemplate, templateLength);
-		//
+		HanningFilter(xT, templateLength);
+		HanningFilter(yT, templateLength);
+		HanningFilter(zT, templateLength);
 		this.xStream = firstDerivative(this.xStream, templateLength);
 		this.yStream = firstDerivative(this.yStream, templateLength);
 		this.zStream = firstDerivative(this.zStream, templateLength);
-		this.xTemplate = firstDerivative(this.xTemplate, templateLength);
-		this.yTemplate = firstDerivative(this.yTemplate, templateLength);
-		this.zTemplate = firstDerivative(this.zTemplate, templateLength);
+		xT = firstDerivative(xT, templateLength);
+		yT = firstDerivative(yT, templateLength);
+		zT = firstDerivative(zT, templateLength);
 		//
-		result[0] = DTW(this.xStream, this.xTemplate, templateLength); // * signalAbsAvg(this.x1);
-		result[1] = DTW(this.yStream, this.yTemplate, templateLength); // * signalAbsAvg(this.y1);
-		result[2] = DTW(this.zStream, this.zTemplate, templateLength); // * signalAbsAvg(this.z1);
+		// // Find likey start locations:
+		// int xIndexAligned = 0;//alignSequenceStart(this.xStream,
+		// this.xTemplate, analysisEveryX);
+		// int yIndexAligned = 0;//alignSequenceStart(this.yStream,
+		// this.yTemplate, analysisEveryX);
+		// int zIndexAligned = 0;//alignSequenceStart(this.zStream,
+		// this.zTemplate, analysisEveryX);
+		//
+		// // DTW(arr1, arr2, lengthToAnalyze, offset1, offset2)
+		// // Analysis from offset1 to offset1+lengthToAnalyze of arr1, offset2
+		// to
+		// // offset2+lengthToAnalyze of arr2
+		 result[0] = DTW(this.xStream, xT, templateLength, 0, 0);
+		 result[1] = DTW(this.yStream, yT, templateLength, 0, 0);
+		 result[2] = DTW(this.zStream, zT, templateLength, 0, 0);
+
 		// // scale DTW scores by power
 		// // assume signal1 is the reference
 		// // because we don't care as much if a signal that doesn't change much
 		// // has a worse score
 		// result[3] = finalScoreModel(result[0], result[1], result[2]);
 
-		result[3] = (float)Math.random(); //testing
+		result[3] = (float) Math.sqrt(result[0]*result[0] + result[1]*result[1] + result[2]*result[2]);
 		return result;
 	}
 
@@ -121,19 +113,6 @@ public class MotionAnalyzer {
 			xStream[i] = sx1.getY(i).floatValue();
 			yStream[i] = sy1.getY(i).floatValue();
 			zStream[i] = sz1.getY(i).floatValue();
-		}
-	}
-
-	public void setDataSet2(SimpleXYSeries sx2, SimpleXYSeries sy2, SimpleXYSeries sz2) {
-		int len = sx2.size();
-		len2 = len;
-		xTemplate = new float[len];
-		yTemplate = new float[len];
-		zTemplate = new float[len];
-		for (int i = 0; i < len; i++) {
-			xTemplate[i] = sx2.getY(i).floatValue();
-			yTemplate[i] = sy2.getY(i).floatValue();
-			zTemplate[i] = sz2.getY(i).floatValue();
 		}
 	}
 
@@ -173,7 +152,7 @@ public class MotionAnalyzer {
 		// (signal(i + 1) - signal(i - 1))/2
 		float[] ddx = new float[len];
 		for (int i = 1; i < len - 1; i++) {
-			ddx[i] = (data[i] - data[i - 1]) + (data[i + 1] - data[i - 1]) / 2; 
+			ddx[i] = (data[i] - data[i - 1]) + (data[i + 1] - data[i - 1]) / 2;
 			// ddx[i] = 5 * (data[i + 1] - data[i - 1]) / 2;
 		}
 		return ddx;
@@ -206,7 +185,12 @@ public class MotionAnalyzer {
 		return fixed;
 	}
 
-	public void removeDiscontinuities(float[] result, LinkedList<Float> data, int templateLength) {
+	// Removes angle discontinuities, i.e. jumps of 180 degrees.
+	// Preconditions: requires that all possible data series range from (-180,
+	// 180)
+	// rather than, say, 0 to 360.
+	// Also converts data format to float[]
+	public void removeDiscontinuitiesAndConvert(float[] result, LinkedList<Float> data, int templateLength) {
 		int multipleToAdd = 0;
 		float prevVal = data.get(0); // initialize
 
@@ -221,34 +205,74 @@ public class MotionAnalyzer {
 			}
 
 			prevVal = curVal;
-			result[i] = curVal + 360 * multipleToAdd;
-		}
-
-	}
-	
-	//Precondition: startLength << array.length
-	//Find which index gives the optimal alignment between the beginning of template[]
-	//as it's slid over series[]
-	public int alignSequenceStart(float[] series, float[] template, int startLength) {
-		int index = 0; 
-		float distance = 999999999; //distance is big because we're re-using DTW to find
-		float test;
-		//an optimal start alignment
-		//TODO - make sure we're selecting series[i: i+startLength]
-		for (int i = 0; i < startLength; i++) {
-			test = DTW(series, template, startLength);
-			if (test < distance) {
-				index = i; //current winner
+			try {
+				result[i] = curVal + 360 * multipleToAdd;
+			} catch (Exception e) {
+				Log.d("removeDiscontinuities", "result.length:" + result.length + " / i:" + i + " / templateLength:" + templateLength);
 			}
 		}
-		return index; 
+
 	}
 
-	//TODO - can probably try a band constraint in the cost matrix DTW
-	public float DTW(float[] array1, float[] array2, int templateLength) {
+	public void removeDiscontinuities(float[] data, int templateLength) {
+		int multipleToAdd = 0;
+		float prevVal = data[0]; // initialize
+
+		for (int i = 0; i < templateLength; i++) {
+			float curVal = data[0];
+
+			if ((prevVal - curVal) > 178) {
+				multipleToAdd++;
+			}
+			if ((curVal - prevVal) > 178) {
+				multipleToAdd--;
+			}
+
+			prevVal = curVal;
+			// try {
+			data[i] = curVal + 360 * multipleToAdd;
+			// } catch (Exception e) {
+			// Log.d("removeDiscontinuities",
+			// "result.length:"+result.length+" / i:"+i+" / templateLength:"+templateLength);
+			// }
+		}
+
+	}
+
+	// Precondition: startLength << array.length
+	// Find which index gives the optimal alignment between the beginning of
+	// template[]
+	// as it's slid over series[]
+	public int alignSequenceStart(float[] series, float[] template, int startLength) {
+		int index = 0;
+		float distance = 999999999; // distance is big because we're re-using
+									// DTW to find
+		float test;
+		// an optimal start alignment
+		// TODO - make sure we're selecting series[i: i+startLength]
+		for (int i = 0; i < startLength; i++) {
+
+			// float[] thisSeries = null;
+			// System.arraycopy(series, i, thisSeries, 0, startLength);
+
+			test = DTW(series, template, startLength, i, 0);
+
+			if (test < distance) {
+				index = i; // current winner
+			}
+		}
+		return index;
+	}
+
+	// TODO - can probably try a band constraint in the cost matrix DTW
+	// Note: only analyzing over templateLength # of points in both
+	// DTW(arr1, arr2, lengthToAnalyze, offset1, offset2)
+	// Analysis from offset1 to offset1+lengthToAnalyze of arr1, offset2 to
+	// offset2+lengthToAnalyze of arr2
+	public float DTW(float[] array1, float[] array2, int templateLength, int array1IndexOffset, int array2IndexOffset) {
 		float[][] DTW;
-		int len1 = templateLength; //array1.length;
-		int len2 = templateLength; //array2.length;
+		int len1 = templateLength;// + array1IndexOffset; // array1.length;
+		int len2 = templateLength;// + array2IndexOffset; // array2.length;
 		DTW = new float[len1][len2];
 
 		// Initialization
@@ -259,13 +283,16 @@ public class MotionAnalyzer {
 			DTW[i][0] = 9999999999.0f; // really big number
 		}
 		DTW[0][0] = 0;
-		
-		//Switching to windowed version:
-		//j goes from i-R to i+R where R is window width
+
+		// Switching to windowed version:
+		// j goes from i-R to i+R where R is window width; say length of
+		// template1 / 2 (though we're assuming they're the same here)
 
 		// Main loop
-		for (int i = 1; i < len1; i++) {
-			for (int j = 1; j < len2; j++) {
+		int iStart = 1;// 1 + array1IndexOffset;
+		int jStart = 1;// 1 + array2IndexOffset;
+		for (int i = iStart; i < len1; i++) {
+			for (int j = jStart; j < len2; j++) {
 				float cost = euclidDistance(array1[i], array2[j]);
 				DTW[i][j] = cost + returnMin(DTW[i - 1][j], DTW[i][j - 1], DTW[i - 1][j - 1]);
 			}
@@ -305,7 +332,7 @@ public class MotionAnalyzer {
 	public float euclidDistance(float x, float y) {
 		return (float) Math.pow((x - y), 2.0);
 	}
-	
+
 	public float vectorEuclidDistance(float[] x, float[] y, int len) {
 		float sum = 0;
 		for (int i = 0; i < len; i++) {
@@ -333,6 +360,16 @@ public class MotionAnalyzer {
 	}
 
 	private float[] toFloatArray(LinkedList<Float> list, int size) {
+		if (list.size() < size)
+			return null;
+		float[] newData = new float[size];
+		for (int i = 0; i < size; i++) {
+			newData[i] = list.get(i);
+		}
+		return newData;
+	}
+
+	public static float[] toFloatArray(ArrayList<Float> list, int size) {
 		if (list.size() < size)
 			return null;
 		float[] newData = new float[size];

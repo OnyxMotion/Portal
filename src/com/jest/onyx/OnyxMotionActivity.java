@@ -87,7 +87,7 @@ public class OnyxMotionActivity extends Activity implements OnTouchListener, Sen
 	private Button saveDataButton;
 	private ArrayList<String> spinnerMotionLabelsArray = null;
 
-	private boolean playPauseVal = true;
+	private static boolean playPauseVal = true;
 	private static PointF minXY; // used for touch screen actions
 	private static PointF maxXY;
 
@@ -97,9 +97,9 @@ public class OnyxMotionActivity extends Activity implements OnTouchListener, Sen
 
 	// /////////////// ANALYSIS VARIABLES ///////////////
 	private static MotionAnalyzer MA = null;
-	private static LinkedList<Float> xTemplate = null;
-	private static LinkedList<Float> yTemplate = null;
-	private static LinkedList<Float> zTemplate = null;
+	private static float[] xTemplate = null;
+	private static float[] yTemplate = null;
+	private static float[] zTemplate = null;
 	private static LinkedList<Float> xStreaming = null;
 	private static LinkedList<Float> yStreaming = null;
 	private static LinkedList<Float> zStreaming = null;
@@ -109,6 +109,7 @@ public class OnyxMotionActivity extends Activity implements OnTouchListener, Sen
 	private static int streamLength = 0;
 	private static int analysesCompleted = 0;
 	private static int analysisEveryX = 10; // motion analysis will occur every
+	private final static Object lock = new Object();
 
 	// sampleRate/analysisEveryX time
 	// interval
@@ -208,6 +209,7 @@ public class OnyxMotionActivity extends Activity implements OnTouchListener, Sen
 		chooseReferenceSpinner.setOnItemSelectedListener(new OnItemSelectedListener() {
 			@Override
 			public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+				playPauseVal = !playPauseVal;
 				String selection = spinnerMotionLabelsArray.get(position);
 				long row = motionLabelRows[position];
 				// Toast.makeText(getActivity(), "Spinner item selected: " +
@@ -220,13 +222,14 @@ public class OnyxMotionActivity extends Activity implements OnTouchListener, Sen
 				// NOTE - this is the current reference template which we will
 				// want to be doing
 				// real-time analysis against
-				xTemplate = MA.toLinkedList(data.dataX);
-				yTemplate = MA.toLinkedList(data.dataY);
-				zTemplate = MA.toLinkedList(data.dataZ);
-				templateLength = xTemplate.size();
+				xTemplate = MotionAnalyzer.toFloatArray(data.dataX, len);
+				yTemplate = MotionAnalyzer.toFloatArray(data.dataY, len);
+				zTemplate = MotionAnalyzer.toFloatArray(data.dataZ, len);
+				templateLength = xTemplate.length;
 
 				referenceText.setText("Reference motion: " + selection);
 				// showNewData2(len, x, y, z);
+				playPauseVal = !playPauseVal;
 			}
 
 			@Override
@@ -267,34 +270,36 @@ public class OnyxMotionActivity extends Activity implements OnTouchListener, Sen
 	// -180 and 180
 	public static void addDataPoint(float x, float y, float z) {
 
-		// Update the graph:
-		// update level data:
-		xSeries.setModel(Arrays.asList(new Number[] { x }), SimpleXYSeries.ArrayFormat.Y_VALS_ONLY);
-		ySeries.setModel(Arrays.asList(new Number[] { y }), SimpleXYSeries.ArrayFormat.Y_VALS_ONLY);
-		zSeries.setModel(Arrays.asList(new Number[] { z }), SimpleXYSeries.ArrayFormat.Y_VALS_ONLY);
+		if (playPauseVal) {
+			// Update the graph:
+			// update level data:
+			xSeries.setModel(Arrays.asList(new Number[] { x }), SimpleXYSeries.ArrayFormat.Y_VALS_ONLY);
+			ySeries.setModel(Arrays.asList(new Number[] { y }), SimpleXYSeries.ArrayFormat.Y_VALS_ONLY);
+			zSeries.setModel(Arrays.asList(new Number[] { z }), SimpleXYSeries.ArrayFormat.Y_VALS_ONLY);
 
-		// get rid the oldest sample in history:
-		if (zHSeries.size() > HISTORY_SIZE) {
-			zHSeries.removeFirst();
-			yHSeries.removeFirst();
-			xHSeries.removeFirst();
-			// remove first from the linked-list data:
-			xStreaming.removeFirst();
-			yStreaming.removeFirst();
-			zStreaming.removeFirst();
+			// get rid the oldest sample in history:
+			if (zHSeries.size() > HISTORY_SIZE) {
+				zHSeries.removeFirst();
+				yHSeries.removeFirst();
+				xHSeries.removeFirst();
+				// remove first from the linked-list data:
+				xStreaming.removeFirst();
+				yStreaming.removeFirst();
+				zStreaming.removeFirst();
+			}
+
+			// add the latest history sample:
+			xHSeries.addLast(null, x);
+			yHSeries.addLast(null, y);
+			zHSeries.addLast(null, z);
+			// update variables to be used in analysis:
+			xStreaming.add(x);
+			yStreaming.add(y);
+			zStreaming.add(z);
+			streamLength++;
+
+			new AnalyzeMotionTask().execute();
 		}
-
-		// add the latest history sample:
-		xHSeries.addLast(null, x);
-		yHSeries.addLast(null, y);
-		zHSeries.addLast(null, z);
-		// update variables to be used in analysis:
-		xStreaming.add(x);
-		yStreaming.add(y);
-		zStreaming.add(z);
-		streamLength++;
-
-		new AnalyzeMotionTask().execute();
 
 	}
 
@@ -578,9 +583,11 @@ public class OnyxMotionActivity extends Activity implements OnTouchListener, Sen
 		protected float[] doInBackground(Float... params) {
 			// REAL-TIME DATA ANALYSIS
 			float[] res = null;
-			if ((streamLength > templateLength) && (streamLength % analysisEveryX) == 0) {
-				res = MA.testAlgorithm1(xStreaming, yStreaming, zStreaming, xTemplate, yTemplate, zTemplate, templateLength);
-				analysesCompleted++;
+			synchronized (lock) {
+				if ((streamLength > templateLength) && (streamLength % analysisEveryX) == 0) {
+					res = MA.testAlgorithm1(xStreaming, yStreaming, zStreaming, xTemplate, yTemplate, zTemplate, templateLength, analysisEveryX);
+					analysesCompleted++;
+				}
 			}
 			return res;
 		}

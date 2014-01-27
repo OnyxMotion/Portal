@@ -118,7 +118,7 @@ public class RazorAHRS {
 	 */
 	public RazorAHRS(BluetoothDevice btDevice, RazorListener razorListener)
 			throws RuntimeException {
-		this(btDevice, razorListener, RazorOutputMode.YAW_PITCH_ROLL_ANGLES);
+		this(btDevice, razorListener, RazorOutputMode.CALIBRATED_SENSOR_DATA);
 	}
 
 	/**

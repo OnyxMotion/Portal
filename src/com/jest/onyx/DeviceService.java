@@ -54,7 +54,7 @@ public class DeviceService extends Service {
 			@Override
 			public void onAnglesUpdate(float yaw, float pitch, float roll) {
 				// PAYLOAD - update the UI and data structures
-				OnyxMotionActivity.addDataPoint(yaw, pitch, roll);
+				//OnyxMotionActivity.addDataPoint(yaw, pitch, roll);
 			}
 
 			@Override
@@ -64,7 +64,7 @@ public class DeviceService extends Service {
 
 			@Override
 			public void onSensorsUpdate(float accX, float accY, float accZ, float magX, float magY, float magZ, float gyrX, float gyrY, float gyrZ) {
-				// TODO Auto-generated method stub
+				OnyxMotionActivity.getNewData(accX,accY,accZ,magX,magY,magZ,gyrX,gyrZ,gyrZ);
 
 			}
 		});

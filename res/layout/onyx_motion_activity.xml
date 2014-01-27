@@ -12,7 +12,7 @@
         android:layout_margin="5dp"
         android:text="@string/app_name"
         android:textStyle="bold" />
-    
+
     <TextView
         android:id="@+id/reference_title"
         android:layout_width="wrap_content"
@@ -21,7 +21,7 @@
         android:layout_margin="5dp"
         android:text="Score: "
         android:textStyle="bold" />
-    
+
     <TextView
         android:id="@+id/score_text"
         android:layout_width="wrap_content"
@@ -31,71 +31,92 @@
         android:text="@string/app_name"
         android:textStyle="bold" />
 
-    <com.androidplot.xy.XYPlot
-        android:id="@+id/sensorHistoryPlotFragment"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:layout_margin="0dp"
-        android:layout_marginLeft="10px"
-        android:layout_marginRight="10px"
-        android:layout_marginTop="10px"
-        android:layout_weight="1"
-        androidPlot.backgroundPaint.color="#000000"
-        androidPlot.borderPaint.color="#000000"
-        androidPlot.domainLabel="Domain"
-        androidPlot.domainLabelWidget.labelPaint.textSize="@dimen/domain_label_font_size"
-        androidPlot.graphWidget.backgroundPaint.color="#000000"
-        androidPlot.graphWidget.domainLabelPaint.textSize="@dimen/domain_tick_label_font_size"
-        androidPlot.graphWidget.domainOriginLabelPaint.textSize="@dimen/domain_tick_label_font_size"
-        androidPlot.graphWidget.gridBackgroundPaint.color="#000000"
-        androidPlot.graphWidget.marginBottom="25dp"
-        androidPlot.graphWidget.marginLeft="15dp"
-        androidPlot.graphWidget.marginRight="10dp"
-        androidPlot.graphWidget.marginTop="20dp"
-        androidPlot.graphWidget.rangeLabelPaint.textSize="@dimen/range_tick_label_font_size"
-        androidPlot.graphWidget.rangeOriginLabelPaint.textSize="@dimen/range_tick_label_font_size"
-        androidPlot.legendWidget.heightMetric.value="25dp"
-        androidPlot.legendWidget.iconSizeMetrics.heightMetric.value="15dp"
-        androidPlot.legendWidget.iconSizeMetrics.widthMetric.value="15dp"
-        androidPlot.legendWidget.textPaint.textSize="@dimen/legend_text_font_size"
-        androidPlot.rangeLabel="Range"
-        androidPlot.rangeLabelWidget.labelPaint.textSize="@dimen/range_label_font_size"
-        androidPlot.title="Real-time Data"
-        androidPlot.titleWidget.labelPaint.textSize="@dimen/title_font_size"
-        androidplot.renderMode="use_background_thread" />
+    <!-- <com.androidplot.xy.XYPlot -->
+    <!-- android:id="@+id/sensorHistoryPlotFragment" -->
+    <!-- android:layout_width="fill_parent" -->
+    <!-- android:layout_height="fill_parent" -->
+    <!-- android:layout_margin="0dp" -->
+    <!-- android:layout_marginLeft="10px" -->
+    <!-- android:layout_marginRight="10px" -->
+    <!-- android:layout_marginTop="10px" -->
+    <!-- android:layout_weight="1" -->
+    <!-- androidPlot.backgroundPaint.color="#000000" -->
+    <!-- androidPlot.borderPaint.color="#000000" -->
+    <!-- androidPlot.domainLabel="Domain" -->
+    <!-- androidPlot.domainLabelWidget.labelPaint.textSize="@dimen/domain_label_font_size" -->
+    <!-- androidPlot.graphWidget.backgroundPaint.color="#000000" -->
+    <!-- androidPlot.graphWidget.domainLabelPaint.textSize="@dimen/domain_tick_label_font_size" -->
+    <!-- androidPlot.graphWidget.domainOriginLabelPaint.textSize="@dimen/domain_tick_label_font_size" -->
+    <!-- androidPlot.graphWidget.gridBackgroundPaint.color="#000000" -->
+    <!-- androidPlot.graphWidget.marginBottom="25dp" -->
+    <!-- androidPlot.graphWidget.marginLeft="15dp" -->
+    <!-- androidPlot.graphWidget.marginRight="10dp" -->
+    <!-- androidPlot.graphWidget.marginTop="20dp" -->
+    <!-- androidPlot.graphWidget.rangeLabelPaint.textSize="@dimen/range_tick_label_font_size" -->
+    <!-- androidPlot.graphWidget.rangeOriginLabelPaint.textSize="@dimen/range_tick_label_font_size" -->
+    <!-- androidPlot.legendWidget.heightMetric.value="25dp" -->
+    <!-- androidPlot.legendWidget.iconSizeMetrics.heightMetric.value="15dp" -->
+    <!-- androidPlot.legendWidget.iconSizeMetrics.widthMetric.value="15dp" -->
+    <!-- androidPlot.legendWidget.textPaint.textSize="@dimen/legend_text_font_size" -->
+    <!-- androidPlot.rangeLabel="Range" -->
+    <!-- androidPlot.rangeLabelWidget.labelPaint.textSize="@dimen/range_label_font_size" -->
+    <!-- androidPlot.title="Real-time Data" -->
+    <!-- androidPlot.titleWidget.labelPaint.textSize="@dimen/title_font_size" -->
+    <!-- androidplot.renderMode="use_background_thread" /> -->
 
-<!--     <com.androidplot.xy.XYPlot -->
-<!--         android:id="@+id/sensorHistoryPlotFragment2" -->
-<!--         android:layout_width="fill_parent" -->
-<!--         android:layout_height="fill_parent" -->
-<!--         android:layout_margin="0dp" -->
-<!--         android:layout_marginLeft="10px" -->
-<!--         android:layout_marginRight="10px" -->
-<!--         android:layout_marginTop="10px" -->
-<!--         android:layout_weight="1" -->
-<!--         androidPlot.backgroundPaint.color="#000000" -->
-<!--         androidPlot.borderPaint.color="#000000" -->
-<!--         androidPlot.domainLabel="Domain" -->
-<!--         androidPlot.domainLabelWidget.labelPaint.textSize="@dimen/domain_label_font_size" -->
-<!--         androidPlot.graphWidget.backgroundPaint.color="#000000" -->
-<!--         androidPlot.graphWidget.domainLabelPaint.textSize="@dimen/domain_tick_label_font_size" -->
-<!--         androidPlot.graphWidget.domainOriginLabelPaint.textSize="@dimen/domain_tick_label_font_size" -->
-<!--         androidPlot.graphWidget.gridBackgroundPaint.color="#000000" -->
-<!--         androidPlot.graphWidget.marginBottom="25dp" -->
-<!--         androidPlot.graphWidget.marginLeft="15dp" -->
-<!--         androidPlot.graphWidget.marginRight="10dp" -->
-<!--         androidPlot.graphWidget.marginTop="20dp" -->
-<!--         androidPlot.graphWidget.rangeLabelPaint.textSize="@dimen/range_tick_label_font_size" -->
-<!--         androidPlot.graphWidget.rangeOriginLabelPaint.textSize="@dimen/range_tick_label_font_size" -->
-<!--         androidPlot.legendWidget.heightMetric.value="25dp" -->
-<!--         androidPlot.legendWidget.iconSizeMetrics.heightMetric.value="15dp" -->
-<!--         androidPlot.legendWidget.iconSizeMetrics.widthMetric.value="15dp" -->
-<!--         androidPlot.legendWidget.textPaint.textSize="@dimen/legend_text_font_size" -->
-<!--         androidPlot.rangeLabel="Range" -->
-<!--         androidPlot.rangeLabelWidget.labelPaint.textSize="@dimen/range_label_font_size" -->
-<!--         androidPlot.title="Reference Motion" -->
-<!--         androidPlot.titleWidget.labelPaint.textSize="@dimen/title_font_size" -->
-<!--         androidplot.renderMode="use_background_thread" /> -->
+
+    <!-- <com.androidplot.xy.XYPlot -->
+    <!-- android:id="@+id/sensorHistoryPlotFragment2" -->
+    <!-- android:layout_width="fill_parent" -->
+    <!-- android:layout_height="fill_parent" -->
+    <!-- android:layout_margin="0dp" -->
+    <!-- android:layout_marginLeft="10px" -->
+    <!-- android:layout_marginRight="10px" -->
+    <!-- android:layout_marginTop="10px" -->
+    <!-- android:layout_weight="1" -->
+    <!-- androidPlot.backgroundPaint.color="#000000" -->
+    <!-- androidPlot.borderPaint.color="#000000" -->
+    <!-- androidPlot.domainLabel="Domain" -->
+    <!-- androidPlot.domainLabelWidget.labelPaint.textSize="@dimen/domain_label_font_size" -->
+    <!-- androidPlot.graphWidget.backgroundPaint.color="#000000" -->
+    <!-- androidPlot.graphWidget.domainLabelPaint.textSize="@dimen/domain_tick_label_font_size" -->
+    <!-- androidPlot.graphWidget.domainOriginLabelPaint.textSize="@dimen/domain_tick_label_font_size" -->
+    <!-- androidPlot.graphWidget.gridBackgroundPaint.color="#000000" -->
+    <!-- androidPlot.graphWidget.marginBottom="25dp" -->
+    <!-- androidPlot.graphWidget.marginLeft="15dp" -->
+    <!-- androidPlot.graphWidget.marginRight="10dp" -->
+    <!-- androidPlot.graphWidget.marginTop="20dp" -->
+    <!-- androidPlot.graphWidget.rangeLabelPaint.textSize="@dimen/range_tick_label_font_size" -->
+    <!-- androidPlot.graphWidget.rangeOriginLabelPaint.textSize="@dimen/range_tick_label_font_size" -->
+    <!-- androidPlot.legendWidget.heightMetric.value="25dp" -->
+    <!-- androidPlot.legendWidget.iconSizeMetrics.heightMetric.value="15dp" -->
+    <!-- androidPlot.legendWidget.iconSizeMetrics.widthMetric.value="15dp" -->
+    <!-- androidPlot.legendWidget.textPaint.textSize="@dimen/legend_text_font_size" -->
+    <!-- androidPlot.rangeLabel="Range" -->
+    <!-- androidPlot.rangeLabelWidget.labelPaint.textSize="@dimen/range_label_font_size" -->
+    <!-- androidPlot.title="Reference Motion" -->
+    <!-- androidPlot.titleWidget.labelPaint.textSize="@dimen/title_font_size" -->
+    <!-- androidplot.renderMode="use_background_thread" /> -->
+
+    <TextView
+        android:id="@+id/score_number"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="5dp"
+        android:textSize="160dp"
+        android:text="##"
+        android:textStyle="bold" />
+    
+    <TextView
+        android:id="@+id/score_feedback"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="5dp"
+        android:textSize="50dp"
+        android:text="Nice shot!"
+        android:textStyle="bold" />
 
     <LinearLayout
         android:layout_width="fill_parent"
@@ -110,24 +131,26 @@
             android:layout_height="wrap_content"
             android:text="Play/Pause" />
 
-        <Button
-            android:id="@+id/save_data"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Save Data" />
+        <!-- <Button -->
+        <!-- android:id="@+id/save_data" -->
+        <!-- android:layout_width="wrap_content" -->
+        <!-- android:layout_height="wrap_content" -->
+        <!-- android:text="Save Data" /> -->
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:text="Reference:"
-            android:textStyle="bold" />
 
-        <Spinner
-            android:id="@+id/choose_reference"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" >
-        </Spinner>
+        <!-- <TextView -->
+        <!-- android:layout_width="wrap_content" -->
+        <!-- android:layout_height="wrap_content" -->
+        <!-- android:layout_marginLeft="10dp" -->
+        <!-- android:text="Reference:" -->
+        <!-- android:textStyle="bold" /> -->
+
+
+        <!-- <Spinner -->
+        <!-- android:id="@+id/choose_reference" -->
+        <!-- android:layout_width="wrap_content" -->
+        <!-- android:layout_height="wrap_content" > -->
+        <!-- </Spinner> -->
     </LinearLayout>
 
 </LinearLayout>

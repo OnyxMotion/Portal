@@ -7,6 +7,7 @@ import android.bluetooth.BluetoothDevice;
 import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.jest.razor.RazorAHRS;
@@ -53,6 +54,7 @@ public class DeviceService extends Service {
 
 			@Override
 			public void onAnglesUpdate(float yaw, float pitch, float roll) {
+				Log.d("onAnglesUpdate", "does this happen?");
 				// PAYLOAD - update the UI and data structures
 				//OnyxMotionActivity.addDataPoint(yaw, pitch, roll);
 			}
@@ -63,8 +65,9 @@ public class DeviceService extends Service {
 			}
 
 			@Override
-			public void onSensorsUpdate(float accX, float accY, float accZ, float magX, float magY, float magZ, float gyrX, float gyrY, float gyrZ) {
-				OnyxMotionActivity.getNewData(accX,accY,accZ,magX,magY,magZ,gyrX,gyrZ,gyrZ);
+			public void onSensorsUpdate(float accX, float accY, float accZ, float oriX, float oriY, float oriZ, float gyrX, float gyrY, float gyrZ) {
+				Log.d("onSensorsUpdate", "got new data: " + accX);
+				OnyxMotionActivity.getNewData(accX,accY,accZ,oriX,oriY,oriZ,gyrX,gyrZ,gyrZ);
 
 			}
 		});

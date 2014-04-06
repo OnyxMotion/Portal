@@ -24,20 +24,21 @@ public class MotionAnalyzer {
 	private float[] templateGX;
 	private float[] templateGY;
 	private float[] templateGZ;
-	private float energyAX; //signal energies post-bucketing post-derivative
+	private float energyAX; // signal energies post-bucketing post-derivative
 	private float energyAY;
 	private float energyAZ;
 	private float energyGX;
 	private float energyGY;
 	private float energyGZ;
+	private float accLambda; //how much more do we weight accelerometer signals vs. gyro?
 	private int templateLengthCompressed = 0;
 	private int templateLengthOriginal = 0;
 	private float templateEnergyAcc = 0; // prederivative energy
 	private float templateEnergyGyro = 0;
-	
+
 	private int bucketSize;
 	private int dtwWindow;
-	
+
 	private Context context;
 
 	public MotionAnalyzer(int maxSize) {
@@ -67,14 +68,17 @@ public class MotionAnalyzer {
 			// invalid template
 			disp(c, "Warning: template lengths unequal. Consider debugging.");
 		} else {
-			disp(c, "Template loaded, length: " + avgLen);
+			// disp(c, "Template loaded, length: " + avgLen);
 		}
-		
+
 		templateLengthOriginal = avgLen;
-		
-		//Choose bucketSize and dtwWindow:
-		bucketSize = 5;
-		dtwWindow = 3;
+
+		// Choose bucketSize and dtwWindow:
+		bucketSize = 6;
+		dtwWindow = 4;
+		accLambda = 6;
+		// n=118, bucketSize=3, dtwWindow=5: analysis works every 10ms (room to
+		// spare? unknown)
 
 		templateAX = bucketSignal(tempAX, bucketSize);
 		templateAY = bucketSignal(tempAY, bucketSize);
@@ -82,12 +86,16 @@ public class MotionAnalyzer {
 		templateGX = bucketSignal(tempGX, bucketSize);
 		templateGY = bucketSignal(tempGY, bucketSize);
 		templateGZ = bucketSignal(tempGZ, bucketSize);
-		
-		templateLengthCompressed = templateAX.length; //get the updated length after bucketing
+
+		templateLengthCompressed = templateAX.length; // get the updated length
+														// after bucketing
+		disp(c, "Compressed template length: " + templateLengthCompressed);
 
 		// preprocess them so the comparison is ready for the DTW:
-		templateEnergyAcc = getEnergy(templateAX, templateLengthCompressed) + getEnergy(templateAY, templateLengthCompressed) + getEnergy(templateAZ, templateLengthCompressed);
-		templateEnergyGyro = getEnergy(templateGX, templateLengthCompressed) + getEnergy(templateGY, templateLengthCompressed) + getEnergy(templateGZ, templateLengthCompressed);
+		templateEnergyAcc = getEnergy(templateAX, templateLengthCompressed) + getEnergy(templateAY, templateLengthCompressed)
+				+ getEnergy(templateAZ, templateLengthCompressed);
+		templateEnergyGyro = getEnergy(templateGX, templateLengthCompressed) + getEnergy(templateGY, templateLengthCompressed)
+				+ getEnergy(templateGZ, templateLengthCompressed);
 		// derivative:
 		templateAX = firstDerivative(templateAX, templateLengthCompressed);
 		templateAY = firstDerivative(templateAY, templateLengthCompressed);
@@ -95,27 +103,42 @@ public class MotionAnalyzer {
 		templateGX = firstDerivative(templateGX, templateLengthCompressed);
 		templateGY = firstDerivative(templateGY, templateLengthCompressed);
 		templateGZ = firstDerivative(templateGZ, templateLengthCompressed);
-		
-		energyAX = getEnergy(templateAX, templateLengthCompressed);
-		energyAY = getEnergy(templateAY, templateLengthCompressed);
-		energyAZ = getEnergy(templateAZ, templateLengthCompressed);
-		energyGX = getEnergy(templateGX, templateLengthCompressed);
+
+		energyAX = accLambda*getEnergy(templateAX, templateLengthCompressed);
+		energyAY = accLambda*getEnergy(templateAY, templateLengthCompressed);
+		energyAZ = accLambda*getEnergy(templateAZ, templateLengthCompressed);
+		energyGX = getEnergy(templateGX, templateLengthCompressed); //weighting gyro more
 		energyGY = getEnergy(templateGY, templateLengthCompressed);
 		energyGZ = getEnergy(templateGZ, templateLengthCompressed);
+		float energySumAcc = energyAX + energyAY + energyAZ;
+		// disp(c, "energySumAcc: "+energySumAcc); //e.g. 2.14E7
+		float energySumGyro = energyGX + energyGY + energyGZ;
+		float energySum = energySumAcc + energySumGyro;
+		energyAX = energyAX / energySum;
+		energyAY = energyAY / energySum;
+		energyAZ = energyAZ / energySum;
+		energyGX = energyGX / energySum;
+		energyGY = energyGY / energySum;
+		energyGZ = energyGZ / energySum;
+		// disp(c,
+		// "energyAX: "+energyAX+" // energyAY: "+energyAY+" // energyAZ: "+energyAZ);
+		// //e.g. 0.36, 0.32, ...
+		// disp(c,
+		// "energyGX: "+energyGX+" // energyGY: "+energyGY+" // energyGZ: "+energyGZ);
 
 	}
 
 	public float[] DTWscoring(LinkedList<Float> aXS, LinkedList<Float> aYS, LinkedList<Float> aZS, LinkedList<Float> gXS, LinkedList<Float> gYS,
 			LinkedList<Float> gZS) {
 		float[] result = new float[7];
-		
-		float [] axs = bucketSignalLL(aXS, bucketSize);
-		float [] ays = bucketSignalLL(aYS, bucketSize);
-		float [] azs = bucketSignalLL(aZS, bucketSize);
-		float [] gxs = bucketSignalLL(gXS, bucketSize);
-		float [] gys = bucketSignalLL(gYS, bucketSize);
-		float [] gzs = bucketSignalLL(gZS, bucketSize);
-		
+
+		float[] axs = bucketSignalLL(aXS, bucketSize);
+		float[] ays = bucketSignalLL(aYS, bucketSize);
+		float[] azs = bucketSignalLL(aZS, bucketSize);
+		float[] gxs = bucketSignalLL(gXS, bucketSize);
+		float[] gys = bucketSignalLL(gYS, bucketSize);
+		float[] gzs = bucketSignalLL(gZS, bucketSize);
+
 		axs = firstDerivative(axs, axs.length);
 		ays = firstDerivative(ays, ays.length);
 		azs = firstDerivative(azs, azs.length);
@@ -140,16 +163,30 @@ public class MotionAnalyzer {
 		result[3] = gxDTW;
 		result[4] = gyDTW;
 		result[5] = gzDTW;
-		//Weight the DTW scores by template energy per axis:
-		result[6] = axDTW*energyAX + ayDTW*energyAY + azDTW*energyAZ + gxDTW*energyGX + gyDTW*energyGY + gzDTW*energyGZ;
+		// Weight the DTW scores by template energy per axis:
+		result[6] = finalScoreModel646(axDTW * energyAX + ayDTW * energyAY + azDTW * energyAZ + gxDTW * energyGX + gyDTW * energyGY + gzDTW * energyGZ);
 		
-		//fixing score ideas:
-		//- try making buckets smaller
-		//- change scale to extend scoring max (divide all energies by 10^X)
-		
+
+		// fixing score ideas:
+		// - try making buckets smaller
+		// - change scale to extend scoring max (divide all energies by 10^X)
+
 		return result;
 	}
 	
+	//A hack final score for:
+	//- JS free-throw of length 118 (6-axis) on Razor M5
+	//- parameters bucketSize = 6; dtwWindow = 4; accLambda = 6;
+	//- super-hacky 2-point model
+	float finalScoreModel646(float dtwScore) {
+		float a = 1e-7f;
+		float b = -68.987f;
+		float res = a*dtwScore + b;
+		if (res > 100f) res = 100f;
+		res = round(res, 0);
+		return res;
+	}
+
 	float[] bucketSignal(float[] original, int bucketSize) {
 
 		int i, j;
@@ -192,8 +229,18 @@ public class MotionAnalyzer {
 			int right = left + bucketSize;
 			if (right > origLen)
 				right = origLen;
+
 			for (j = left; j < right; j++) {
+				// try {
+				//Log.d("bucketSignalLL", "origLen:" + origLen + "//newSignalSize:" + newSignalSize + "//" + "i:" + i + "//" + "j:" + j);
 				res[i] += original.get(j);
+				// } catch(Exception e) {
+				// disp(context,
+				// "newSignalSize:"+newSignalSize+"//"+"i:"+i+"//"+"j:"+j);
+				// Log.d("bucketSignalLL",
+				// "newSignalSize:"+newSignalSize+"//"+"i:"+i+"//"+"j:"+j);
+				// Log.d("bucketSignalLL", e.toString());
+				// }
 			}
 			// can divide if wanted, I don't see the point at this time
 		}
@@ -216,145 +263,6 @@ public class MotionAnalyzer {
 
 	public float[] getZ1() {
 		return zStream;
-	}
-
-	public float[] testAlgorithmLinear(LinkedList<Float> xS, LinkedList<Float> yS, LinkedList<Float> zS, float[] xT, float[] yT, float[] zT,
-			int templateLength, int analysisEveryX) {
-		float[] result = new float[4]; // return 3 metrics, for matches in x, y,
-										// z
-
-		// Preconditioning: remove angle discontinuities, low-pass filter, and
-		// take first derivative
-		removeDiscontinuitiesAndConvert(this.xStream, xS, templateLength);
-		removeDiscontinuitiesAndConvert(this.yStream, yS, templateLength);
-		removeDiscontinuitiesAndConvert(this.zStream, zS, templateLength);
-		removeDiscontinuities(zT, templateLength);
-		removeDiscontinuities(yT, templateLength);
-		removeDiscontinuities(zT, templateLength);
-
-		HanningFilter(this.xStream, templateLength);
-		HanningFilter(this.yStream, templateLength);
-		HanningFilter(this.zStream, templateLength);
-		HanningFilter(xT, templateLength);
-		HanningFilter(yT, templateLength);
-		HanningFilter(zT, templateLength);
-
-		float streamEnergy = getEnergy(this.xStream, templateLength) + getEnergy(this.yStream, templateLength) + getEnergy(this.zStream, templateLength);
-		float factorToConsider = 0.6f; // if <0.5 of template energy, don't
-										// bother
-										// if (streamEnergy < factorToConsider *
-										// this.templateEnergy) {
-		//
-		// result[0] = 9999999.0f;
-		// result[1] = 9999999.0f;
-		// result[2] = 9999999.0f;
-		// result[3] = 9999999.0f;
-		//
-		// } else { // proceed with analysis - could be a match
-		//
-		// this.xStream = firstDerivative(this.xStream, templateLength);
-		// this.yStream = firstDerivative(this.yStream, templateLength);
-		// this.zStream = firstDerivative(this.zStream, templateLength);
-		// xT = firstDerivative(xT, templateLength);
-		// yT = firstDerivative(yT, templateLength);
-		// zT = firstDerivative(zT, templateLength);
-		//
-		// result[0] = vectorEuclidDistance(this.xStream, xT, templateLength);
-		// result[1] = vectorEuclidDistance(this.yStream, yT, templateLength);
-		// result[2] = vectorEuclidDistance(this.zStream, zT, templateLength);
-		//
-		// result[3] = (float) Math.sqrt(result[0] * result[0] + result[1] *
-		// result[1] + result[2] * result[2]);
-		// if (result[3] > 9999999.0f)
-		// result[3] = 9999999.0f;
-		// }
-		return result;
-
-	}
-
-	// Smoothing and DTW; returns scores in array
-	public float[] testAlgorithmDTW(LinkedList<Float> xS, LinkedList<Float> yS, LinkedList<Float> zS, float[] xT, float[] yT, float[] zT, int templateLength,
-			int analysisEveryX) {
-		float[] result = new float[4]; // return 3 metrics, for matches in x, y,
-										// z
-
-		// Preconditioning: remove angle discontinuities, low-pass filter, and
-		// take first derivative
-		removeDiscontinuitiesAndConvert(this.xStream, xS, templateLength);
-		removeDiscontinuitiesAndConvert(this.yStream, yS, templateLength);
-		removeDiscontinuitiesAndConvert(this.zStream, zS, templateLength);
-		removeDiscontinuities(zT, templateLength);
-		removeDiscontinuities(yT, templateLength);
-		removeDiscontinuities(zT, templateLength);
-		HanningFilter(this.xStream, templateLength);
-		HanningFilter(this.yStream, templateLength);
-		HanningFilter(this.zStream, templateLength);
-		HanningFilter(xT, templateLength);
-		HanningFilter(yT, templateLength);
-		HanningFilter(zT, templateLength);
-
-		float streamEnergy = getEnergy(this.xStream, templateLength) + getEnergy(this.yStream, templateLength) + getEnergy(this.zStream, templateLength);
-		float factorToConsider = 0.6f; // if <0.5 of template energy, don't
-										// bother
-										// if (streamEnergy < factorToConsider *
-										// this.templateEnergy) {
-		//
-		// result[0] = 9999999.0f;
-		// result[1] = 9999999.0f;
-		// result[2] = 9999999.0f;
-		// result[3] = 9999999.0f;
-		//
-		// } else { // proceed with analysis - could be a match
-		//
-		// this.xStream = firstDerivative(this.xStream, templateLength);
-		// this.yStream = firstDerivative(this.yStream, templateLength);
-		// this.zStream = firstDerivative(this.zStream, templateLength);
-		// xT = firstDerivative(xT, templateLength);
-		// yT = firstDerivative(yT, templateLength);
-		// zT = firstDerivative(zT, templateLength);
-		// //
-		// // // Find likey start locations:
-		// int xIndexAligned = alignSequenceStart(this.xStream, xT,
-		// analysisEveryX);
-		// int yIndexAligned = alignSequenceStart(this.yStream, yT,
-		// analysisEveryX);
-		// int zIndexAligned = alignSequenceStart(this.zStream, zT,
-		// analysisEveryX);
-		// //
-		// // // DTW(arr1, arr2, lengthToAnalyze, offset1, offset2)
-		// // // Analysis from offset1 to offset1+lengthToAnalyze of arr1,
-		// // offset2
-		// // to
-		// // // offset2+lengthToAnalyze of arr2
-		// result[0] = DTW(this.xStream, xT, templateLength, xIndexAligned, 0);
-		// result[1] = DTW(this.yStream, yT, templateLength, yIndexAligned, 0);
-		// result[2] = DTW(this.zStream, zT, templateLength, zIndexAligned, 0);
-		//
-		// // // scale DTW scores by power
-		// // // assume signal1 is the reference
-		// // // because we don't care as much if a signal that doesn't change
-		// // much
-		// // // has a worse score
-		// // result[3] = finalScoreModel(result[0], result[1], result[2]);
-		//
-		// result[3] = (float) Math.sqrt(result[0] * result[0] + result[1] *
-		// result[1] + result[2] * result[2]);
-		// if (result[3] > 9999999.0f)
-		// result[3] = 9999999.0f;
-		//
-		// }
-		return result;
-	}
-
-	public float finalScoreModel(float x, float y, float z) {
-		float magnitude = (float) Math.sqrt(x * x + y * y + z * z);
-
-		float finalScore = (float) (108.72 * Math.exp(magnitude * -0.004));
-		if (finalScore > 100)
-			finalScore = 100;
-
-		return round(finalScore, 2);
-
 	}
 
 	public void setDataSet1(SimpleXYSeries sx1, SimpleXYSeries sy1, SimpleXYSeries sz1) {
@@ -553,10 +461,10 @@ public class MotionAnalyzer {
 
 		// Initialization
 		for (int i = 0; i < len2; i++) {
-			DTW[0][i] = 9999999999.0f; // really big number
+			DTW[0][i] = 1e20f; // really big number
 		}
 		for (int i = 0; i < len1; i++) {
-			DTW[i][0] = 9999999999.0f; // really big number
+			DTW[i][0] = 1e20f; // really big number
 		}
 		DTW[0][0] = 0;
 

@@ -98,15 +98,15 @@
     <!-- androidPlot.titleWidget.labelPaint.textSize="@dimen/title_font_size" -->
     <!-- androidplot.renderMode="use_background_thread" /> -->
 
-    <TextView
-        android:id="@+id/score_number"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_margin="5dp"
-        android:textSize="160dp"
-        android:text="##"
-        android:textStyle="bold" />
+<!--     <TextView -->
+<!--         android:id="@+id/score_number" -->
+<!--         android:layout_width="wrap_content" -->
+<!--         android:layout_height="wrap_content" -->
+<!--         android:layout_gravity="center" -->
+<!--         android:layout_margin="5dp" -->
+<!--         android:textSize="100dp" -->
+<!--         android:text="##" -->
+<!--         android:textStyle="bold" /> -->
     
     <TextView
         android:id="@+id/score_feedback"

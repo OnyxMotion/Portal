@@ -46,7 +46,7 @@ public class RazorAHRS {
 	private static final String NEW_LINE = "\r\n";
 
 	// Timeout to init Razor AHRS after a Bluetooth connection has been established
-	public static final int INIT_TIMEOUT_MS = 5000;
+	public static final int INIT_TIMEOUT_MS = 10000;
 
 	// IDs passed to internal message handler
 	private static final int MSG_ID__YPR_DATA = 0;
@@ -360,8 +360,9 @@ public class RazorAHRS {
 			// token. So we're good, no matter what state the tracker currently is in.
 			final String configSynchID = "01";
 			final byte[] configSynchReply = EncodingUtils.getAsciiBytes(SYNCH_TOKEN + configSynchID + NEW_LINE);
+			
 			write("#ob#o1#oe0#s" + configSynchID);
-			while (!readToken(configSynchReply, readByte())) { }
+			while (!readToken(configSynchReply, readByte())) { } 
 		}
 
 		/**

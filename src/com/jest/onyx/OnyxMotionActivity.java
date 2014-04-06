@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
@@ -17,12 +19,11 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.media.MediaPlayer;
-import android.media.Ringtone;
-import android.media.RingtoneManager;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Message;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -79,6 +80,7 @@ public class OnyxMotionActivity extends Activity implements SensorEventListener 
 
 	private static TextView title;
 	private TextView referenceText;
+	private static TextView scoreNumber;
 	private static TextView scoreText;
 	public static final int MENU_CONNECT = Menu.FIRST;
 	public static final int MENU_DEBUG = Menu.FIRST + 1;
@@ -103,9 +105,13 @@ public class OnyxMotionActivity extends Activity implements SensorEventListener 
 	private static LinkedList<Float> gyroXS = null;
 	private static LinkedList<Float> gyroYS = null;
 	private static LinkedList<Float> gyroZS = null;
-	private static int templateLength = 0; 
+	private static LinkedList<Float> lastBestScores = null;
+	private static int numAnalysesBetweenScoreUpdate = 200; // every
+															// X/(sample_rate==100)
+															// seconds
+	private static int templateLength = 0;
 	private static int templateLengthOriginal = 0;
-	
+
 	// template in real-time
 	private static int streamLength = 0;
 	private static int analysesCompleted = 0;
@@ -114,6 +120,8 @@ public class OnyxMotionActivity extends Activity implements SensorEventListener 
 	private final static Object lock = new Object();
 	private static Context mContext;
 	private static MediaPlayer mPlayer;
+
+	public static Handler mHandler;
 
 	// sampleRate/analysisEveryX time
 	// interval
@@ -129,7 +137,7 @@ public class OnyxMotionActivity extends Activity implements SensorEventListener 
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.onyx_motion_activity);
- 
+
 		// make a temporary data file for razor data.
 		File root = Environment.getExternalStorageDirectory();
 		razorFile = new File(root, "razor_streaming.txt");
@@ -158,7 +166,8 @@ public class OnyxMotionActivity extends Activity implements SensorEventListener 
 		// OTHER UI
 		title = (TextView) findViewById(R.id.fragment_title);
 		referenceText = (TextView) findViewById(R.id.reference_title);
-		scoreText = (TextView) findViewById(R.id.score_text);
+		scoreText = (TextView) findViewById(R.id.score_text); scoreText.setSingleLine(false);
+		//scoreNumber = (TextView) findViewById(R.id.score_number);
 		// chooseReferenceSpinner = (Spinner)
 		// findViewById(R.id.choose_reference);
 		playPauseButton = (Button) findViewById(R.id.play_pause);
@@ -190,6 +199,8 @@ public class OnyxMotionActivity extends Activity implements SensorEventListener 
 		gyroYS = new LinkedList<Float>();
 		gyroZS = new LinkedList<Float>();
 
+		lastBestScores = new LinkedList<Float>();
+
 		for (int i = 0; i < templateLength; i++) {
 			accXS.add(0f); // init to zeros
 			accYS.add(0f); // init to zeros
@@ -197,8 +208,27 @@ public class OnyxMotionActivity extends Activity implements SensorEventListener 
 			gyroXS.add(0f); // init to zeros
 			gyroYS.add(0f); // init to zeros
 			gyroZS.add(0f); // init to zeros
-		}
 
+			lastBestScores.add(0f); // init to zeros
+		}
+		
+		
+		mHandler = new Handler() {
+		    public void handleMessage(Message msg) {
+		        //scoreNumber.setText(Float.toString(max(lastBestScores))); //this is the textview
+		    }
+		};
+		
+		Timer timer = new Timer();
+		
+		timer.scheduleAtFixedRate(new TimerTask() {
+	        public void run() {
+	            mHandler.obtainMessage(1).sendToTarget();
+	        }
+	    }, 0, 1000);
+
+		
+		
 	}
 
 	private void loadReferenceData() {
@@ -224,20 +254,20 @@ public class OnyxMotionActivity extends Activity implements SensorEventListener 
 				return true;
 			}
 		});
-//		saveDataButton.setOnClickListener(new OnClickListener() {
-//			// The purpose of DEBUG is to grab and display data for debugging
-//			// and data analysis
-//			@Override
-//			public void onClick(View v) {
-//				// TEST: current boundaries of what we're looking at
-//				// Toast.makeText(getApplicationContext(), "Min: " + minXY.x +
-//				// " | Max: " + maxXY.x, Toast.LENGTH_LONG).show();
-//				// Intent i = new Intent(OnyxMotionActivity.this,
-//				// SaveDataActivity.class);
-//				// startActivity(i);
-//
-//			}
-//		});
+		// saveDataButton.setOnClickListener(new OnClickListener() {
+		// // The purpose of DEBUG is to grab and display data for debugging
+		// // and data analysis
+		// @Override
+		// public void onClick(View v) {
+		// // TEST: current boundaries of what we're looking at
+		// // Toast.makeText(getApplicationContext(), "Min: " + minXY.x +
+		// // " | Max: " + maxXY.x, Toast.LENGTH_LONG).show();
+		// // Intent i = new Intent(OnyxMotionActivity.this,
+		// // SaveDataActivity.class);
+		// // startActivity(i);
+		//
+		// }
+		// });
 		// setupReferenceSpinner();
 
 	}
@@ -414,22 +444,12 @@ public class OnyxMotionActivity extends Activity implements SensorEventListener 
 	@Override
 	public void onSensorChanged(SensorEvent event) {
 		if (playPauseVal) {
-			// if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
-			// float[] values = event.values;
-			// float x = values[0];
-			// float y = values[1];
-			// float z = values[2];
-			// }
-			if (event.sensor.getType() == Sensor.TYPE_GYROSCOPE) {
-				float[] values = event.values;
-				float x = values[0];
-				float y = values[1];
-				float z = values[2];
-
-				if (sensorReady) {
-					addDataPoint(x, y, z);
-				}
-			}
+			 if (event.sensor.getType() == Sensor.TYPE_ROTATION_VECTOR) {
+			 float[] values = event.values;
+			 float x = values[0];
+			 float y = values[1];
+			 float z = values[2];
+			}	
 		}
 
 	}
@@ -673,6 +693,7 @@ public class OnyxMotionActivity extends Activity implements SensorEventListener 
 			synchronized (lock) {
 				res = MA.DTWscoring(accXS, accYS, accYS, gyroXS, gyroYS, gyroZS);
 				analysesCompleted++;
+
 			}
 
 			return res;
@@ -686,58 +707,78 @@ public class OnyxMotionActivity extends Activity implements SensorEventListener 
 				// scoreText.setText("Scores:::" + " x: " + res[0] + " y: " +
 				// res[1] + " z: " + res[2] + " // Overall: " + res[3]);
 				float score = res[6];
-				scoreText.setText("Data received: " + numDataReceived + " // Analyses completed: " + analysesCompleted + " // real-time score: "+score);
-				//record scores to notepad for testing:
-				String csq1 = Float.toString(score);
-				writer.println(csq1);
+
+				// //////////////////////// SHOW SCORE
+				// //////////////////////////////////////
+				if (lastBestScores.size() > numAnalysesBetweenScoreUpdate) {
+					lastBestScores.removeFirst();
+				}
+				lastBestScores.add(score);
+
+				//scoreText.setText("Data received: " + numDataReceived + " // Analyses completed: " + analysesCompleted + " // real-time score: " + score);
+				// record scores to notepad for testing:
+				//String csq1 = Float.toString(score);
+				//writer.println(csq1);
 			}
 		}
 	}
 
-	public static void getNewData(float accX, float accY, float accZ, float magX, float magY, float magZ, float gyrX, float gyrY, float gyrZ) {
+	public static void getNewData(float accX, float accY, float accZ, float oriX, float oriY, float oriZ, float gyrX, float gyrY, float gyrZ) {
 
 		if (playPauseVal) {
+			synchronized (lock) {
+				numDataReceived++;
 
-			numDataReceived++;
+				 scoreText.setText("Data: " + "//A//" + accX + "/" + accY +
+				 "/" + "\n"+
+				 accZ + "/" + "//O//" + oriX + "/" + oriY + "/" + oriZ + "/" +
+				 "//G//" + gyrX + "/" + "\n"+
+				 + gyrY + "/" + gyrZ + "/");
+				 String csq1 = "#A-=" + accX + "," + accY + "," + accZ;
+				 String csq2 = "#O-=" + oriX + "," + oriY + "," + oriZ;
+				 String csq3 = "#G-=" + gyrX + "," + gyrY + "," + gyrZ;
+				
+				 writer.println(csq1);
+				 writer.println(csq2);
+				 writer.println(csq3);
 
-			// scoreText.setText("Data: " + "//A//" + accX + "/" + accY + "/" +
-			// accZ + "/" + "//M//" + magX + "/" + magY + "/" + magZ + "/" +
-			// "//G//" + gyrX + "/"
-			// + gyrY + "/" + gyrZ + "/");
-			// String csq1 = "#A-=" + accX + "," + accY + "," + accZ;
-			// String csq2 = "#M-=" + magX + "," + magY + "," + magZ;
-			// String csq3 = "#G-=" + gyrX + "," + gyrY + "," + gyrZ;
-			//
-			// writer.println(csq1);
-			// writer.println(csq2);
-			// writer.println(csq3);
-
-			// Update variables:
-			// (precondition: all arrays are of the same length
-			if (accXS.size() > templateLengthOriginal) {
-				accXS.removeFirst();
-				accYS.removeFirst();
-				accZS.removeFirst();
-				gyroXS.removeFirst();
-				gyroYS.removeFirst();
-				gyroZS.removeFirst();
+				// Update variables:
+				// (precondition: all arrays are of the same length
+				if (accXS.size() > templateLengthOriginal) {
+					accXS.removeFirst();
+					accYS.removeFirst();
+					accZS.removeFirst();
+					gyroXS.removeFirst();
+					gyroYS.removeFirst();
+					gyroZS.removeFirst();
+				}
+				// Add:
+				accXS.add(accX);
+				accYS.add(accY);
+				accZS.add(accZ);
+				gyroXS.add(gyrX);
+				gyroYS.add(gyrY);
+				gyroZS.add(gyrZ);
 			}
-			// Add:
-			accXS.add(accX);
-			accYS.add(accY);
-			accZS.add(accZ);
-			gyroXS.add(gyrX);
-			gyroYS.add(gyrY);
-			gyroZS.add(gyrZ);
-
 			// Analysis:
-			new AnalyzeMotionTask().execute();
+			new AnalyzeMotionTask().execute(); // for threaded
 		}
 
 	}
 
 	public void disp(String text) {
 		Toast.makeText(OnyxMotionActivity.this, text, Toast.LENGTH_LONG).show();
+	}
+
+	private float max(LinkedList<Float> lastBestScores) {
+		int len = lastBestScores.size();
+		float max = 0f;
+		for (int i = 0; i < len; i++) {
+			float test = lastBestScores.get(i);
+			if (test > max)
+				max = test;
+		}
+		return max;
 	}
 
 	// public static void showNewData(int len, ArrayList<Float> x,

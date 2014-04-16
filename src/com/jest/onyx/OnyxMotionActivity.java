@@ -123,8 +123,7 @@ public class OnyxMotionActivity extends Activity implements SensorEventListener 
 
 	public static Handler mHandler;
 
-	// sampleRate/analysisEveryX time
-	// interval
+	// sampleRate/analysisEveryX time interval
 
 	// ///////////////// Networking //////////////////////
 	private BluetoothAdapter bluetoothAdapter;
@@ -166,8 +165,9 @@ public class OnyxMotionActivity extends Activity implements SensorEventListener 
 		// OTHER UI
 		title = (TextView) findViewById(R.id.fragment_title);
 		referenceText = (TextView) findViewById(R.id.reference_title);
-		scoreText = (TextView) findViewById(R.id.score_text); scoreText.setSingleLine(false);
-		//scoreNumber = (TextView) findViewById(R.id.score_number);
+		scoreText = (TextView) findViewById(R.id.score_text);
+		scoreText.setSingleLine(false);
+		// scoreNumber = (TextView) findViewById(R.id.score_number);
 		// chooseReferenceSpinner = (Spinner)
 		// findViewById(R.id.choose_reference);
 		playPauseButton = (Button) findViewById(R.id.play_pause);
@@ -211,24 +211,22 @@ public class OnyxMotionActivity extends Activity implements SensorEventListener 
 
 			lastBestScores.add(0f); // init to zeros
 		}
-		
-		
-		mHandler = new Handler() {
-		    public void handleMessage(Message msg) {
-		        //scoreNumber.setText(Float.toString(max(lastBestScores))); //this is the textview
-		    }
-		};
-		
-		Timer timer = new Timer();
-		
-		timer.scheduleAtFixedRate(new TimerTask() {
-	        public void run() {
-	            mHandler.obtainMessage(1).sendToTarget();
-	        }
-	    }, 0, 1000);
 
-		
-		
+		mHandler = new Handler() {
+			public void handleMessage(Message msg) {
+				// scoreNumber.setText(Float.toString(max(lastBestScores)));
+				// //this is the textview
+			}
+		};
+
+		Timer timer = new Timer();
+
+		timer.scheduleAtFixedRate(new TimerTask() {
+			public void run() {
+				mHandler.obtainMessage(1).sendToTarget();
+			}
+		}, 0, 1000);
+
 	}
 
 	private void loadReferenceData() {
@@ -444,12 +442,12 @@ public class OnyxMotionActivity extends Activity implements SensorEventListener 
 	@Override
 	public void onSensorChanged(SensorEvent event) {
 		if (playPauseVal) {
-			 if (event.sensor.getType() == Sensor.TYPE_ROTATION_VECTOR) {
-			 float[] values = event.values;
-			 float x = values[0];
-			 float y = values[1];
-			 float z = values[2];
-			}	
+			if (event.sensor.getType() == Sensor.TYPE_ROTATION_VECTOR) {
+				float[] values = event.values;
+				float x = values[0];
+				float y = values[1];
+				float z = values[2];
+			}
 		}
 
 	}
@@ -715,10 +713,12 @@ public class OnyxMotionActivity extends Activity implements SensorEventListener 
 				}
 				lastBestScores.add(score);
 
-				//scoreText.setText("Data received: " + numDataReceived + " // Analyses completed: " + analysesCompleted + " // real-time score: " + score);
+				// scoreText.setText("Data received: " + numDataReceived +
+				// " // Analyses completed: " + analysesCompleted +
+				// " // real-time score: " + score);
 				// record scores to notepad for testing:
-				//String csq1 = Float.toString(score);
-				//writer.println(csq1);
+				// String csq1 = Float.toString(score);
+				// writer.println(csq1);
 			}
 		}
 	}
@@ -729,18 +729,15 @@ public class OnyxMotionActivity extends Activity implements SensorEventListener 
 			synchronized (lock) {
 				numDataReceived++;
 
-				 scoreText.setText("Data: " + "//A//" + accX + "/" + accY +
-				 "/" + "\n"+
-				 accZ + "/" + "//O//" + oriX + "/" + oriY + "/" + oriZ + "/" +
-				 "//G//" + gyrX + "/" + "\n"+
-				 + gyrY + "/" + gyrZ + "/");
-				 String csq1 = "#A-=" + accX + "," + accY + "," + accZ;
-				 String csq2 = "#O-=" + oriX + "," + oriY + "," + oriZ;
-				 String csq3 = "#G-=" + gyrX + "," + gyrY + "," + gyrZ;
-				
-				 writer.println(csq1);
-				 writer.println(csq2);
-				 writer.println(csq3);
+				scoreText.setText("Data: " + "//A//" + accX + "/" + accY + "/" + "\n" + accZ + "/" + "//O//" + oriX + "/" + oriY + "/" + oriZ + "/" + "//G//"
+						+ gyrX + "/" + "\n" + +gyrY + "/" + gyrZ + "/");
+				String csq1 = "#A-=" + accX + "," + accY + "," + accZ;
+				String csq2 = "#O-=" + oriX + "," + oriY + "," + oriZ;
+				String csq3 = "#G-=" + gyrX + "," + gyrY + "," + gyrZ;
+
+				writer.println(csq1);
+				writer.println(csq2);
+				writer.println(csq3);
 
 				// Update variables:
 				// (precondition: all arrays are of the same length

@@ -29,7 +29,7 @@ public class ChooseSetDialog extends DialogFragment {
 
 		chooseSet = (Spinner) v.findViewById(R.id.choose_set_spinner);
 
-		ArrayList<String> temp = PhoneActivity.MDM.getSets();
+		ArrayList<String> temp = null;//PhoneActivity.MDM.getSets();
 		int len = temp.size();
 		spinnerMotionSetsArray = new ArrayList<String>();
 		spinnerMotionSetsArray.add(0, CHOOSE_SET_STRING);

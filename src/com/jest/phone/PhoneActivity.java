@@ -26,6 +26,7 @@ import java.util.Arrays;
 
 import org.json.JSONObject;
 
+import android.app.FragmentManager;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -35,7 +36,6 @@ import android.hardware.SensorManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
 import android.util.FloatMath;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -48,13 +48,6 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.androidplot.Plot;
-import com.androidplot.util.Redrawer;
-import com.androidplot.xy.BoundaryMode;
-import com.androidplot.xy.LineAndPointFormatter;
-import com.androidplot.xy.SimpleXYSeries;
-import com.androidplot.xy.XYPlot;
-import com.androidplot.xy.XYStepMode;
 import com.jest.database.MotionDatabaseManager;
 import com.jest.jest.R;
 
@@ -65,16 +58,16 @@ public class PhoneActivity extends FragmentActivity implements OnTouchListener {
 	private static final int HISTORY_SIZE = 500; // number of points to plot in
 	private SensorManager sensorMgr = null;
 	private Sensor orSensor = null;
-	private XYPlot sensorHistoryPlot = null;
+	//private XYPlot sensorHistoryPlot = null;
 	private CheckBox hwAcceleratedCb;
 	private CheckBox showFpsCb;
-	private SimpleXYSeries xSeries;
-	private SimpleXYSeries ySeries;
-	private SimpleXYSeries zSeries;
-	private static SimpleXYSeries xHistorySeries = null;
-	private static SimpleXYSeries yHistorySeries = null;
-	private static SimpleXYSeries zHistorySeries = null;
-	private Redrawer redrawer;
+	//private SimpleXYSeries xSeries;
+	//private SimpleXYSeries ySeries;
+	//private SimpleXYSeries zSeries;
+	//private static SimpleXYSeries xHistorySeries = null;
+	//private static SimpleXYSeries yHistorySeries = null;
+	//private static SimpleXYSeries zHistorySeries = null;
+	//private Redrawer redrawer;
 
 	// ////////////// Additional UI & Debug //////////////
 	private Button playPause;

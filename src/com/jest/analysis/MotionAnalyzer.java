@@ -8,9 +8,6 @@ import android.content.Context;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.androidplot.xy.SimpleXYSeries;
-import com.jest.onyx.OnyxMotionActivity;
-
 public class MotionAnalyzer {
 
 	private float[] xStream;
@@ -264,7 +261,7 @@ public class MotionAnalyzer {
 	public float[] getZ1() {
 		return zStream;
 	}
-
+/*
 	public void setDataSet1(SimpleXYSeries sx1, SimpleXYSeries sy1, SimpleXYSeries sz1) {
 		int len = sx1.size();
 		len1 = len;
@@ -277,7 +274,7 @@ public class MotionAnalyzer {
 			zStream[i] = sz1.getY(i).floatValue();
 		}
 	}
-
+*/
 	public ArrayList<Float> float2ArrayList(float[] data) {
 		int len = data.length;
 		ArrayList<Float> dataArrayList = new ArrayList<Float>();

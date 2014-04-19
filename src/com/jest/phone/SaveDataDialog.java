@@ -45,18 +45,18 @@ public class SaveDataDialog extends DialogFragment {
 					public void run() {
 						try {
 							
-							float[] x = PhoneActivity.getMotionX();
-							float[] y = PhoneActivity.getMotionY();
-							float[] z = PhoneActivity.getMotionZ();
+							float[] x = null;//PhoneActivity.getMotionX();
+							float[] y = null;//PhoneActivity.getMotionY();
+							float[] z = null;//PhoneActivity.getMotionZ();
 							if (x == null || y == null || z == null) {
 								//Toast.makeText(getActivity(), "Failed: not enough motion data.", Toast.LENGTH_LONG).show();
 								progressDialog.dismiss();
 								return;
 							}
-							long row = PhoneActivity.MDM.createMotionLabel(desc, set, score);
-							boolean i = PhoneActivity.MDM.addMotionData(row, x, y, z);
-							if (!PhoneActivity.MDM.doesSetExist(set)) {
-								long newSet = PhoneActivity.MDM.createMotionSet(set, 0, 0);
+							long row = 0;//PhoneActivity.MDM.createMotionLabel(desc, set, score);
+							boolean i = false;//PhoneActivity.MDM.addMotionData(row, x, y, z);
+							if (false){//!PhoneActivity.MDM.doesSetExist(set)) {
+								long newSet = 0;//PhoneActivity.MDM.createMotionSet(set, 0, 0);
 								Toast.makeText(getActivity(), "netSet: " + newSet, Toast.LENGTH_LONG).show();
 							}
 //							Toast.makeText(getActivity(), "Row: " + row, Toast.LENGTH_LONG).show();

@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    android:padding="20dp" >
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="right"
+        android:text="@string/dashboard_title" />
+
+    <TextView
+        android:id="@+id/hourCount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="right"
+        android:text="@string/hourcount_string" />
+
+    <TextView
+        android:id="@+id/improvementScore"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="right"
+        android:text="@string/improvement_string" />
+
+    <TextView
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="right"
+        android:text="@string/progress_string" />
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" >
+
+        <View
+            android:id="@+id/listView"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_centerInParent="true" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignRight="@id/listView"
+            android:text="@string/topskills_string" />
+
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@id/listView"
+            android:layout_alignParentRight="true"
+            android:text="@string/needs_string" />
+
+
+    </RelativeLayout>
+
+        <RelativeLayout 
+   android:layout_width="fill_parent"
+   android:layout_height="wrap_content">
+
+   <View android:id="@+id/listView2"
+       android:layout_width="0dp"
+       android:layout_height="0dp" 
+       android:layout_centerInParent="true"/>
+   <TextView
+       android:id="@+id/skillsList"
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       android:layout_alignRight="@id/listView2"
+       android:layout_alignParentLeft="true"
+       android:text="@string/skillslist_string"/>
+
+   <TextView
+       android:id="@+id/needsList"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_alignLeft="@id/listView2"
+      android:layout_alignParentRight="true"
+      android:text="@string/needslist_string"/>
+   
+   
+
+</RelativeLayout>
+
+    <TextView
+        android:id="@+id/goals"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="right"
+        android:text="@string/goals_string" />
+
+    <Button
+        android:id="@+id/moreDetails"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/detailsButton_string"
+        android:onClick="magicCharts" />
+
+</LinearLayout>

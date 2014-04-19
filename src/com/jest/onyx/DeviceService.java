@@ -11,7 +11,6 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.jest.razor.RazorAHRS;
-import com.jest.razor.RazorExample;
 import com.jest.razor.RazorListener;
 
 public class DeviceService extends Service {

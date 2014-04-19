@@ -15,6 +15,7 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" >
     </uses-permission>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
 
     <uses-sdk
         android:minSdkVersion="8"
@@ -26,7 +27,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name="com.jest.onyx.OnyxMotionActivity"
+            android:name="com.jest.onyx.MainActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -35,6 +36,8 @@
             </intent-filter>
         </activity>
         <activity android:name="com.jest.razor.RazorExample" >
+        </activity>
+        <activity android:name="com.jest.onyx.OnyxMotionActivity" >
         </activity>
         <activity android:name="com.jest.onyx.SaveDataActivity" >
         </activity>
@@ -47,6 +50,11 @@
 
         <service android:name="com.jest.onyx.DeviceService" >
         </service>
+
+        <activity
+            android:name="com.jest.onyx.MainDashboard"
+            android:label="@string/title_activity_main_dashboard" >
+        </activity>
     </application>
 
 </manifest>

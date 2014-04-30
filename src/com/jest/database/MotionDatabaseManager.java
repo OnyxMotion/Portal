@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.widget.Toast;
 
 //Talk to the manager.
 public class MotionDatabaseManager {

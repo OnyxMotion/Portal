@@ -1,7 +1,6 @@
 package com.jest.database;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class SQSrow {
 

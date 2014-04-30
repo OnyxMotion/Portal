@@ -1,15 +1,13 @@
 package com.jest.phone;
 
-import java.util.ArrayList;
-
-import com.jest.jest.R;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.jest.jest.R;
 
 public class BuildMotionSet extends Activity {
 

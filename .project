@@ -3,6 +3,8 @@
 	<name>Jest</name>
 	<comment></comment>
 	<projects>
+		<project>appcompat_v7</project>
+		<project>library</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

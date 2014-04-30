@@ -1,17 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/scrollView1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+<LinearLayout 
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:gravity="center_horizontal"
     android:orientation="vertical"
     android:padding="20dp" >
 
+
+    
     <TextView
         android:id="@+id/title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="right"
         android:text="@string/dashboard_title" />
+    
+    <com.jest.graphs.BarGraph
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:id="@+id/FTgraph"/>
+    
+        <View
+        android:id="@+id/iconUp"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:layout_marginRight="5dp"/>
+    
+        <TextView
+        android:id="@+id/improvementScore"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="right"
+        android:text="@string/improvement_string" />
+    
+        <com.jest.graphs.BarGraph
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:id="@+id/Pgraph"/>
+        
+                <View
+        android:id="@+id/iconDown"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:layout_marginRight="5dp"/>
 
     <TextView
         android:id="@+id/hourCount"
@@ -19,20 +55,16 @@
         android:layout_height="wrap_content"
         android:gravity="right"
         android:text="@string/hourcount_string" />
-
-    <TextView
-        android:id="@+id/improvementScore"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="right"
-        android:text="@string/improvement_string" />
-
-    <TextView
-        android:id="@+id/progressBar"
+    
+        <TextView
+        android:id="@+id/progressRap"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="right"
         android:text="@string/progress_string" />
+    
+
+
 
     <RelativeLayout
         android:layout_width="fill_parent"
@@ -94,7 +126,7 @@
         android:id="@+id/goals"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="right"
+        android:gravity="left"
         android:text="@string/goals_string" />
 
     <Button
@@ -103,6 +135,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/detailsButton_string"
-        android:onClick="magicCharts" />
+        android:onClick="magicCharts" 
+        android:textColor="@drawable/selectatext"
+   		android:background="@drawable/button"
+        />
 
 </LinearLayout>
+
+    </ScrollView>

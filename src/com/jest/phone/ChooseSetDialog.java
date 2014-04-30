@@ -2,11 +2,9 @@ package com.jest.phone;
 
 import java.util.ArrayList;
 
-import com.jest.jest.R;
-
+import android.app.DialogFragment;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +12,8 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
-import android.widget.Toast;
+
+import com.jest.jest.R;
 
 public class ChooseSetDialog extends DialogFragment {
 

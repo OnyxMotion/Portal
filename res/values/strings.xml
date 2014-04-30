@@ -5,20 +5,24 @@
     <string name="action_settings">Settings</string>
     <string name="hello_world">Hello world!</string>
     <string name="dashboard_title">Your Practice Summary</string>
-    <string name="hourcount_string">You logged %1$d hours this %2$s</string>
+    <string name="hourcount_string">You logged %1$d hours this %2$s.</string>
+    <string name="progress_string">Thats %1$d less than usual. </string>
     <string name="improvement_string">Up %1$d %% from last %2$s</string>
     <string name="welcome">Yo, what up?</string>
     <string name="playerID_string">Player ID</string>
     <string name="password_string">Password</string>
     <string name="login_button">Login</string>
     <string name="attempts">0</string>
-    <string name="title_activity_main_dashboard">MainDashboard</string>
-    <string name="progress_string">Here lies a progress bar. It is dead.</string>
+    <string name="title_activity_main_dashboard">Dashboard</string>
     <string name="topskills_string">Top Skill</string>
     <string name="needs_string">Needs Improvement</string>
     <string name="skillslist_string">%1$s</string>
     <string name="needslist_string">%1$s</string>
     <string name="goals_string">You %1$s your accuracy and practice time goals this %2$s </string>
-    <string name="detailsButton_string"> Details </string>
+    <string name="detailsButton_string"> Reports </string>
+    <string name="skill1Button_string">%1$s<small>%2$d %% avg.</small></string>
+    <string name="skill2Button_string">%1$s<small>%2$d %% avg.</small></string>
+    <string name="skill3Button_string">%1$s<small>%2$d %% avg.</small></string>
+    <string name="title_activity_skill_set_list">Skill Report</string>
 
 </resources>

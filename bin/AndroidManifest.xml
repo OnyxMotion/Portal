@@ -18,7 +18,7 @@
     <uses-permission android:name="android.permission.READ_CONTACTS" />
 
     <uses-sdk
-        android:minSdkVersion="8"
+        android:minSdkVersion="16"
         android:targetSdkVersion="18" />
 
     <application
@@ -48,6 +48,17 @@
         <activity android:name="com.jest.phone.BuildMotionSet" >
         </activity>
 
+        
+        
+                <activity android:name="com.jest.graphs.BarGraph" >
+        </activity>
+                <activity android:name="com.jest.graphs.LineGraph" >
+        </activity>
+                <activity android:name ="com.jest.graphs.LinePoint" >
+        </activity>
+                        <activity android:name="com.jest.graphs.PieGraph" >
+        </activity>
+        
         <service android:name="com.jest.onyx.DeviceService" >
         </service>
 
@@ -55,6 +66,16 @@
             android:name="com.jest.onyx.MainDashboard"
             android:label="@string/title_activity_main_dashboard" >
         </activity>
+
+        <activity
+            android:name="com.jest.onyx.SkillSetList"
+            android:label="@string/title_activity_skill_set_list"
+            android:parentActivityName="com.jest.onyx.MainDashboard" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.jest.onyx.MainDashboard" />
+        </activity>
+         
     </application>
 
 </manifest>

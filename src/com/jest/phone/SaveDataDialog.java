@@ -1,7 +1,5 @@
 package com.jest.phone;
 
-import com.jest.jest.R;
-
 import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -13,6 +11,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import com.jest.jest.R;
 
 public class SaveDataDialog extends DialogFragment {
 

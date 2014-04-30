@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:gravity="center_horizontal"
     android:orientation="vertical"
-    android:background="@drawable/background"
+    android:background="@android:color/white"
     android:padding="20dp" >
     
 
@@ -14,7 +14,7 @@
         android:layout_height="122dp"
         android:contentDescription="@null"
         android:layout_margin="20dp"
-        android:src="@drawable/ic_launcher" />
+        android:src="@drawable/onyxringwhite" />
     
 
 
@@ -44,8 +44,10 @@
    android:layout_height="wrap_content"
    android:onClick="login"
    android:layout_margin="20dp"
-   android:textColor="@color/text_color"
+   android:textColor="@drawable/selectatext"
    android:text="@string/login_button" 
+   android:background="@drawable/button"
+   
 />
 
         

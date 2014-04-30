@@ -47,18 +47,15 @@
         </activity>
         <activity android:name="com.jest.phone.BuildMotionSet" >
         </activity>
+        <activity android:name="com.jest.graphs.BarGraph" >
+        </activity>
+        <activity android:name="com.jest.graphs.LineGraph" >
+        </activity>
+        <activity android:name="com.jest.graphs.LinePoint" >
+        </activity>
+        <activity android:name="com.jest.graphs.PieGraph" >
+        </activity>
 
-        
-        
-                <activity android:name="com.jest.graphs.BarGraph" >
-        </activity>
-                <activity android:name="com.jest.graphs.LineGraph" >
-        </activity>
-                <activity android:name ="com.jest.graphs.LinePoint" >
-        </activity>
-                        <activity android:name="com.jest.graphs.PieGraph" >
-        </activity>
-        
         <service android:name="com.jest.onyx.DeviceService" >
         </service>
 
@@ -66,7 +63,6 @@
             android:name="com.jest.onyx.MainDashboard"
             android:label="@string/title_activity_main_dashboard" >
         </activity>
-
         <activity
             android:name="com.jest.onyx.SkillSetList"
             android:label="@string/title_activity_skill_set_list"
@@ -75,7 +71,15 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.jest.onyx.MainDashboard" />
         </activity>
-         
+        <activity
+            android:name="com.jest.onyx.SkillListDetail"
+            android:label="@string/title_activity_skill_list_detail" 
+            android:parentActivityName="com.jest.onyx.SkillSetList"
+            >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.jest.onyx.SkillSetList"/>
+        </activity>
     </application>
 
 </manifest>

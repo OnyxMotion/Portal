@@ -1,65 +1,38 @@
-package com.jest.onyx;
+ package com.jest.onyx;
 
-import android.app.Activity;
+import android.app.ListActivity;
+import android.content.Intent;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 
-import com.fima.chartview.ChartView;
-import com.fima.chartview.LinearSeries;
-import com.fima.chartview.LinearSeries.LinearPoint;
-import com.jest.jest.R;
+ public class SkillSetList extends ListActivity { 
 
-public class SkillSetList extends Activity {
-	
+     static final String[] COUNTRIES = new String[] {
 
-	
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_skill_set_list);
-		
-		// Find the chart view
-		ChartView chartView = (ChartView) findViewById(R.id.chart_view);
+         "Elbow Angle", "Release Speed", "Release Angle"
+     };
 
-		// Create the data points
-		LinearSeries series = new LinearSeries();
-		series.setLineColor(0xFF0099CC);
-		series.setLineWidth(2);
+     /** Called when the activity is first created. */
+     @Override
+     public void onCreate(Bundle savedInstanceState) {
+         super.onCreate(savedInstanceState);
+         setListAdapter(new ArrayAdapter < String > (this,
+                 android.R.layout.simple_list_item_1, COUNTRIES));
+         getListView().setTextFilterEnabled(true);
+     }
 
-		for (double i = 0d; i <= (2d * Math.PI); i += 0.1d) {
-			series.addPoint(new LinearPoint(i, Math.sin(i)));
-		}
+     @Override
+     protected void onListItemClick(ListView l, View v, int position, long id) {
+         // TODO Auto-generated method stub
+         super.onListItemClick(l, v, position, id);
+         
+//         Intent intent = new Intent(getBaseContext(), SkillListDetail.class);
+//         intent.putExtra("SKILL_ID", id);
+//         startActivity(intent);
 
-		// Add chart view data
-		chartView.addSeries(series);
-		chartView.setLeftLabelAdapter(new ValueLabelAdapter(this, LabelOrientation.VERTICAL));
-		chartView.setBottomLabelAdapter(new ValueLabelAdapter(this, LabelOrientation.HORIZONTAL));
+         startActivity(new Intent(this, SkillListDetail.class));
+     }
 
-	}
-	
-
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.main_dashboard, menu);
-		return true;
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		// Handle action bar item clicks here. The action bar will
-		// automatically handle clicks on the Home/Up button, so long
-		// as you specify a parent activity in AndroidManifest.xml.
-		int id = item.getItemId();
-		if (id == R.id.action_settings) {
-			return true;
-		}
-		return super.onOptionsItemSelected(item);
-	}
-
-	
-
-}
+ }

@@ -24,5 +24,6 @@
     <string name="skill2Button_string">%1$s<small>%2$d %% avg.</small></string>
     <string name="skill3Button_string">%1$s<small>%2$d %% avg.</small></string>
     <string name="title_activity_skill_set_list">Skill Report</string>
+    <string name="title_activity_skill_list_detail">SkillListDetail</string>
 
 </resources>

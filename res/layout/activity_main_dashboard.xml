@@ -1,145 +1,138 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/scrollView1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
-<LinearLayout 
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/scrollView1"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:gravity="center_horizontal"
-    android:orientation="vertical"
-    android:padding="20dp" >
+    android:layout_height="wrap_content" >
 
-
-    
-    <TextView
-        android:id="@+id/title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="right"
-        android:text="@string/dashboard_title" />
-    
-    <com.jest.graphs.BarGraph
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:id="@+id/FTgraph"/>
-    
-        <View
-        android:id="@+id/iconUp"
-        android:layout_width="35dp"
-        android:layout_height="35dp"
-        android:layout_marginRight="5dp"/>
-    
-        <TextView
-        android:id="@+id/improvementScore"
-        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="right"
-        android:text="@string/improvement_string" />
-    
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:padding="20dp" >
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="right"
+            android:text="@string/dashboard_title" />
+
         <com.jest.graphs.BarGraph
-        android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:id="@+id/Pgraph"/>
-        
-                <View
-        android:id="@+id/iconDown"
-        android:layout_width="35dp"
-        android:layout_height="35dp"
-        android:layout_marginRight="5dp"/>
-
-    <TextView
-        android:id="@+id/hourCount"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="right"
-        android:text="@string/hourcount_string" />
-    
-        <TextView
-        android:id="@+id/progressRap"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="right"
-        android:text="@string/progress_string" />
-    
-
-
-
-    <RelativeLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content" >
+            android:id="@+id/FTgraph"
+            android:layout_width="match_parent"
+            android:layout_height="200dp" />
 
         <View
-            android:id="@+id/listView"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_centerInParent="true" />
+            android:id="@+id/iconUp"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_marginRight="5dp" />
 
         <TextView
+            android:id="@+id/improvementScore"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignRight="@id/listView"
-            android:text="@string/topskills_string" />
+            android:gravity="right"
+            android:text="@string/improvement_string" />
+
+        <com.jest.graphs.BarGraph
+            android:id="@+id/Pgraph"
+            android:layout_width="match_parent"
+            android:layout_height="200dp" />
+
+        <View
+            android:id="@+id/iconDown"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_marginRight="5dp" />
 
         <TextView
-            android:id="@+id/textView1"
+            android:id="@+id/hourCount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignLeft="@id/listView"
-            android:layout_alignParentRight="true"
-            android:text="@string/needs_string" />
+            android:gravity="right"
+            android:text="@string/hourcount_string" />
 
+        <TextView
+            android:id="@+id/progressRap"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="right"
+            android:text="@string/progress_string" />
 
-    </RelativeLayout>
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" >
 
-        <RelativeLayout 
-   android:layout_width="fill_parent"
-   android:layout_height="wrap_content">
+            <View
+                android:id="@+id/listView"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_centerInParent="true" />
 
-   <View android:id="@+id/listView2"
-       android:layout_width="0dp"
-       android:layout_height="0dp" 
-       android:layout_centerInParent="true"/>
-   <TextView
-       android:id="@+id/skillsList"
-       android:layout_width="wrap_content"
-       android:layout_height="wrap_content"
-       android:layout_alignRight="@id/listView2"
-       android:layout_alignParentLeft="true"
-       android:text="@string/skillslist_string"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignRight="@id/listView"
+                android:text="@string/topskills_string" />
 
-   <TextView
-       android:id="@+id/needsList"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_alignLeft="@id/listView2"
-      android:layout_alignParentRight="true"
-      android:text="@string/needslist_string"/>
-   
-   
+            <TextView
+                android:id="@+id/textView1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@id/listView"
+                android:layout_alignParentRight="true"
+                android:text="@string/needs_string" />
+        
+        </RelativeLayout>
 
-</RelativeLayout>
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" >
 
-    <TextView
-        android:id="@+id/goals"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="left"
-        android:text="@string/goals_string" />
+            <View
+                android:id="@+id/listView2"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_centerInParent="true" />
 
-    <Button
-        android:id="@+id/moreDetails"
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/detailsButton_string"
-        android:onClick="magicCharts" 
-        android:textColor="@drawable/selectatext"
-   		android:background="@drawable/button"
-        />
+            <TextView
+                android:id="@+id/skillsList"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignRight="@id/listView2"
+                android:text="@string/skillslist_string" />
 
-</LinearLayout>
+            <TextView
+                android:id="@+id/needsList"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@id/listView2"
+                android:layout_alignParentRight="true"
+                android:text="@string/needslist_string" />
+        
+        </RelativeLayout>
 
-    </ScrollView>
+        <TextView
+            android:id="@+id/goals"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="left"
+            android:text="@string/goals_string" />
+
+        <Button
+            android:id="@+id/moreDetails"
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/button"
+            android:onClick="magicCharts"
+            android:text="@string/detailsButton_string"
+            android:textColor="@drawable/selectatext" />
+    
+    </LinearLayout>
+
+</ScrollView>

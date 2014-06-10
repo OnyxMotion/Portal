@@ -1,24 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
+	android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center_horizontal"
     android:orientation="vertical"
     android:background="@android:color/white"
     android:padding="20dp" >
     
-
     <ImageView
         android:id="@+id/loginLogo"
         android:layout_width="109dp"
         android:layout_height="122dp"
         android:contentDescription="@null"
         android:layout_margin="20dp"
-        android:src="@drawable/onyxringwhite" />
+		android:src="@drawable/onyxringwhite" />
     
-
-
-
     <EditText
         android:id="@+id/username"
         android:layout_width="match_parent"
@@ -28,8 +24,6 @@
         android:textColor="@color/text_color"
         android:inputType="textPersonName" />
 
-
-
     <EditText
         android:id="@+id/password"
         android:layout_width="match_parent"
@@ -38,27 +32,21 @@
         android:ems="10"
         android:inputType="textPassword" />
     
-        <Button
-   android:id="@+id/loginButton"
-   android:layout_width="wrap_content"
-   android:layout_height="wrap_content"
-   android:onClick="login"
-   android:layout_margin="20dp"
-   android:textColor="@drawable/selectatext"
-   android:text="@string/login_button" 
-   android:background="@drawable/button"
-   
-/>
-
+	<Button
+		android:id="@+id/loginButton"
+   		android:layout_width="wrap_content"
+   		android:layout_height="wrap_content"
+   		android:onClick="login"
+   		android:layout_margin="20dp"
+   		android:textColor="@drawable/selectatext"
+   		android:text="@string/login_button" 
+   		android:background="@drawable/button" />
         
-           <TextView
-      android:id="@+id/attempts"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:textColor="@color/text_color"
-      android:text="@string/attempts"
-      android:textAppearance="?android:attr/textAppearanceMedium" />
-
-
+	<TextView
+      	android:id="@+id/attempts"
+      	android:layout_width="wrap_content"
+      	android:layout_height="wrap_content"
+      	android:textColor="@color/text_color"
+      	android:textAppearance="?android:attr/textAppearanceMedium" />
         
 </LinearLayout>

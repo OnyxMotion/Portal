@@ -1,4 +1,5 @@
 package com.jest.getdata;
+
 import java.util.Calendar;
 import java.util.StringTokenizer;
 
@@ -26,7 +27,7 @@ public class DataPoint {
 	// Add additional data associated with the DataPoint here, increase the number
 	// Also increase the size of the data array below, that stores the measurements
 	private static final int DATA_SIZE = 4;
-	private double [] data;
+	private float [] data;
 	
 	/**
 	 * Create a new DataPoint with today's date and zero values for all measurements
@@ -35,7 +36,7 @@ public class DataPoint {
 	public DataPoint(int code) {
 		if (code != CODE) throw new Error("Incorrect code");
 		calendar = Calendar.getInstance();
-		data = new double[DATA_SIZE];
+		data = new float[DATA_SIZE];
 	}
 	
 	/**
@@ -93,6 +94,22 @@ public class DataPoint {
 	}
 	
 	/**
+	 * Set the DataPoint member variables from input arrays
+	 * @param 	ints		The id, sport and type associated with the DataPoint
+	 * @param 	measures	The data associated with the DataPoint
+	 * @param 	time		Milliseconds from Jan 1 1970 associated with the DataPoint
+	 */
+	public void setVarInput(int [] ints, float [] measures, long time) {
+		id = ints[0];
+		sport = ints[1];
+		type = ints[2];
+		calendar.setTimeInMillis(time);
+		for (int i = 0; i < DataPoint.DATA_SIZE; i++)
+			data[i] = measures[i];
+			
+	}
+	
+	/**
 	 * Set the DataPoint member variables from file input
 	 * @param 	token		the input file string
 	 * @param 	code		the code to restrict access to this function
@@ -103,7 +120,7 @@ public class DataPoint {
 		sport = Integer.parseInt(token.nextToken());
 		type = Integer.parseInt(token.nextToken());
 		for (int i = 0; i < DataPoint.DATA_SIZE; i++)
-			data[i] = Double.parseDouble(token.nextToken());
+			data[i] = Float.parseFloat(token.nextToken());
 		calendar.setTimeInMillis(Long.parseLong(token.nextToken()));
 	}
 	

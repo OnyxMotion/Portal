@@ -10,16 +10,8 @@ import java.util.ArrayList;
 public class User {
 
 	private static int CODE;
-	
-	/**
-	 * Unique ID for the user
-	 */
-	int id;
-
-	/**
-	 * The identifying feature of the user
-	 */
-	String username, password, email;
+	private int id;
+	private String username, password, email;
 	
 	/**
 	 * The user's owned/installed software packages
@@ -60,6 +52,55 @@ public class User {
 	}
 	
 	/**
+	 * Set the user information
+	 * @param 	ID		The id associated with the user
+	 * @param 	name	The username associated with the user
+	 * @param 	pwd		The password associated with the user
+	 * @param 	address	The email address associated with the user
+	 * @param 	code	The code to restrict access to this function
+	 */
+	public void setCredentials(int ID, String name, String pwd, String address,
+		int code) {
+		if (code != CODE) throw new Error("Incorrect code");
+		id = ID;
+		username = name;
+		password = pwd;
+		email = address;
+	}
+	
+	/**
+	 * Get the unique identification for the user
+	 * @return 			the unique identification for the user
+	 */
+	public final int getId() {
+		return id;
+	}
+	
+	/**
+	 * Get the user's username
+	 * @return 			the user's username
+	 */
+	public final String getName() {
+		return username;
+	}
+	
+	/**
+	 * Get the user's password
+	 * @return 			the user's password
+	 */
+	public final String getPassword() {
+		return password;
+	}
+	
+	/**
+	 * Get the user's email address
+	 * @return			the user's email address
+	 */
+	public final String getEmail() {
+		return email;
+	}
+	
+	/**
 	 * Get all motion data associated with the user 
 	 * @return			The user's dataPoints, grouped by Type of motion
 	 */
@@ -92,7 +133,7 @@ public class User {
 	/**
 	 * Add a DataPoint to the User
 	 * @param 	dp		The DataPoint to add
-	 * @param 	code	the code to restrict access to this function
+	 * @param 	code	The code to restrict access to this function
 	 */
 	public void addData(DataPoint dp, int code) {
 		if (code != CODE) throw new Error("Incorrect code");
@@ -103,7 +144,7 @@ public class User {
 	
 	/**
 	 * Sort all DataPoints by date and time recorded
-	 * @param 	code	the code to restrict access to this function
+	 * @param 	code	The code to restrict access to this function
 	 */
 	public void sortAllData(int code) {
 		if (code != CODE) throw new Error("Incorrect code");

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
+<!--  
     <declare-styleable name="PieGraph" format="reference">
         <attr name="pieInnerCircleRatio" format="integer"/>
         <attr name="pieSlicePadding" format="dimension"/>
@@ -14,15 +14,15 @@
         <attr name="lineStrokeSpacing" format="dimension"/>
         <attr name="lineUseDip" format="boolean"/>
     </declare-styleable>
-
+-->
     <declare-styleable name="BarGraph" format="reference">
-        <attr name="barAxisColor" format="color"/>
-        <attr name="chartorientation" format="enum">
+<!--         <attr name="barAxisColor" format="color"/>
+-->        <attr name="chartorientation" format="enum">
             <enum name="horizontal" value="0"/>
             <enum name="vertical" value="1"/>
         </attr>
-        <attr name="barShowAxis" format="boolean"/>
+<!--        <attr name="barShowAxis" format="boolean"/>
         <attr name="barShowText" format="boolean"/>
-    </declare-styleable>
+-->    </declare-styleable>
 
 </resources>
